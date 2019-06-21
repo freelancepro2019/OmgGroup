@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">اومجي جروب</string>
+
+    <string name="menu_share">مشاركة التطبيق</string>
+    <string name="omg_tv">اومجي /تي في</string>
+    <string name="omg_radio">اومجي راديو</string>
+    <string name="about_us">من نحن</string>
+    <string name="Advertise_with_us">أعلن معنا</string>
+    <string name="navigation_drawer_open">إفتح</string>
+    <string name="navigation_drawer_close">إغلق</string>
+</resources>

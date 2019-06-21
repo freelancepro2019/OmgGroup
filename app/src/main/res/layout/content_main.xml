@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/bg"
+    android:fillViewport="true"
+    android:fitsSystemWindows="true"
+
+    >
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".MainActivity"
+    tools:showIn="@layout/app_bar_main">
+
+  <ImageView
+      android:layout_width="match_parent"
+      android:layout_height="100dp"
+      android:src="@drawable/logo_title"
+      android:layout_margin="10dp"
+      android:padding="20dp"
+      />
+
+    <ImageView
+        android:id="@+id/image_tv"
+
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/img_bg"
+        android:src="@drawable/omg_tv"
+        android:padding="15dp"
+
+        />
+    <ImageView
+        android:id="@+id/image_radio"
+
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/img_bg"
+        android:src="@drawable/omg_radio"
+        android:padding="17dp"
+        />
+    <LinearLayout
+        android:layout_marginTop="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:weightSum="4"
+
+        >
+        <ImageView
+            android:id="@+id/image_share"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:src="@drawable/share"
+            android:padding="5dp"
+
+            />
+        <ImageView
+            android:id="@+id/image_youtube"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:src="@drawable/youtube"
+
+            />
+        <ImageView
+            android:id="@+id/image_linkedin"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:src="@drawable/linkedin"
+
+            />
+        <ImageView
+            android:id="@+id/image_facebook"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:src="@drawable/facebook"
+
+            />
+
+    </LinearLayout>
+
+</LinearLayout>
+
+</ScrollView>

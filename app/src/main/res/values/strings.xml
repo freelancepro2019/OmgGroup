@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">OmgGroup</string>
+
+    <string name="menu_share">Share</string>
+    <string name="omg_tv">Omg /tv</string>
+    <string name="omg_radio">Omg Radio</string>
+    <string name="about_us">About Us</string>
+    <string name="Advertise_with_us">Advertise with Us</string>
+    <string name="navigation_drawer_open">open</string>
+    <string name="navigation_drawer_close">close</string>
+</resources>
