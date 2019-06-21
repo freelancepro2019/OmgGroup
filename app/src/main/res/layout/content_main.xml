@@ -3,6 +3,7 @@
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/bg"
     android:fillViewport="true"
@@ -17,14 +18,17 @@
     tools:context=".MainActivity"
     tools:showIn="@layout/app_bar_main">
 
-  <ImageView
-      android:layout_width="match_parent"
-      android:layout_height="100dp"
-      android:src="@drawable/logo_title"
-      android:layout_margin="10dp"
-      android:padding="20dp"
-      />
 
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/ad_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:padding="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id" />
     <ImageView
         android:id="@+id/image_tv"
 
