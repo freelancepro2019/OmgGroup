@@ -6,10 +6,11 @@ import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 
@@ -30,6 +31,7 @@ public class AudioActivity extends AppCompatActivity {
         getDataFromIntent();
         typeface = Typeface.createFromAsset(getAssets(),"ar.otf");
         initView();
+
 
 
 
@@ -66,6 +68,12 @@ public class AudioActivity extends AppCompatActivity {
 
         tv_1.setTypeface(typeface);
         tv_2.setTypeface(typeface);
+
+        Glide.with(this)
+                .asGif()
+                .load("https://raw.githubusercontent.com/AhmedMohamedAllam/Omg-Group/master/OMG%20Group/app/waves.gif")
+                .into(image_gif);
+
         image_play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,22 +82,35 @@ public class AudioActivity extends AppCompatActivity {
                 {
                     stop();
                     image_play.setImageResource(R.drawable.play);
+                    image_gif.setVisibility(View.INVISIBLE);
 
                 }else
                 {
                     play();
                     image_play.setImageResource(R.drawable.pause);
+                    image_gif.setVisibility(View.VISIBLE);
+
 
 
                 }
             }
         });
 
-        Glide.with(this)
-                .asGif()
-                .load("https://raw.githubusercontent.com/AhmedMohamedAllam/Omg-Group/master/OMG%20Group/app/waves.gif?token=ADTBOL25CBQIEZRJRGUVJ525CTBXO&fbclid=IwAR13Jcn1XQ8H_GdSFkMtHinKdeODbpGLQwmxoe0IFGPDK45cZT2gmp4vdJk")
-                .into(image_gif);
 
+
+        if (isServiceRunning())
+        {
+            image_play.setImageResource(R.drawable.pause);
+            image_gif.setVisibility(View.VISIBLE);
+
+
+
+        }else
+            {
+                image_play.setImageResource(R.drawable.play);
+                image_gif.setVisibility(View.INVISIBLE);
+
+            }
 
     }
 
@@ -104,7 +125,8 @@ public class AudioActivity extends AppCompatActivity {
     private void stop()
     {
         Intent intent = new Intent(this,RadioService.class);
-        stopService(intent);    }
+        stopService(intent);
+    }
 
     private boolean isServiceRunning()
     {

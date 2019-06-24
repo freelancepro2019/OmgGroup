@@ -2,9 +2,12 @@ package com.elashry.omggroup;
 
 import android.app.Service;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.util.Log;
+
+import java.io.IOException;
 
 public class RadioService extends Service {
 
@@ -21,6 +24,23 @@ public class RadioService extends Service {
     private void setUpMediaPlayer(String url)
     {
         Log.e("url",url);
+        mp = new MediaPlayer();
+        mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
+        try {
+
+            mp.setDataSource(url);
+            mp.prepare();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        mp.start();
 
     }
 
@@ -37,9 +57,16 @@ public class RadioService extends Service {
         return null;
     }
 
+
+
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (mp!=null)
+        {
+            mp.stop();
+
+        }
         stopSelf();
     }
 }

@@ -1,64 +1,61 @@
 package com.elashry.omggroup;
 
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.MediaController;
-import android.widget.ProgressBar;
-import android.widget.VideoView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.universalvideoview.UniversalMediaController;
+import com.universalvideoview.UniversalVideoView;
 
 public class TvActivity extends AppCompatActivity {
 
-    VideoView vidView;
-    private MediaController vidControl;
-    private MediaPlayer mp;
     String url;
+    private UniversalVideoView mVideoView;
+    private UniversalMediaController mMediaController;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tv);
-        vidView = findViewById(R.id.myVideo);
-        final ProgressBar progBar = findViewById(R.id.progBar);
+        /*final ProgressBar progBar = findViewById(R.id.progBar);
         progBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this,R.color.gray), PorterDuff.Mode.SRC_IN);
-
+*/
         getDataFromIntent();
 
-        vidView.setVideoURI(Uri.parse(url));
-        vidView.start();
-        vidControl = new MediaController(this);
-        vidControl.setAnchorView(vidView);
-        vidView.setMediaController(vidControl);
+        mVideoView =  findViewById(R.id.videoView);
+        mMediaController =  findViewById(R.id.media_controller);
+        mVideoView.setMediaController(mMediaController);
+        mVideoView.setVideoURI(Uri.parse(url));
+        mVideoView.start();
+        mVideoView.setFitXY(true);
 
-        vidView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        mVideoView.setVideoViewCallback(new UniversalVideoView.VideoViewCallback() {
             @Override
-            public void onPrepared(MediaPlayer mp) {
-                TvActivity.this.mp = mp;
-                progBar.setVisibility(View.GONE);
+            public void onScaleChange(boolean isFullscreen) {
 
-                mp.setOnInfoListener(new MediaPlayer.OnInfoListener() {
-                    @Override
-                    public boolean onInfo(MediaPlayer mp, int what, int extra) {
-
-                        if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START){
-                            progBar.setVisibility(View.VISIBLE);
-                            return true;
-                        }
-
-                        if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END)
-                        {
-                            progBar.setVisibility(View.GONE);
-                            return true;
-                        }
-                        return false;
-                    }
-                });
             }
+
+            @Override
+            public void onPause(MediaPlayer mediaPlayer) { // Video pause
+            }
+
+            @Override
+            public void onStart(MediaPlayer mediaPlayer) { // Video start/resume to play
+            }
+
+            @Override
+            public void onBufferingStart(MediaPlayer mediaPlayer) {// steam start loading
+            }
+
+            @Override
+            public void onBufferingEnd(MediaPlayer mediaPlayer) {// steam end loading
+
+            }
+
         });
+
 
 
     }
@@ -77,11 +74,7 @@ public class TvActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        if (mp!=null)
-        {
-            mp.release();
-        }
-        vidView.stopPlayback();
+
 
 
     }
