@@ -17,7 +17,16 @@
     tools:context=".MainActivity"
     tools:showIn="@layout/app_bar_main">
 
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-1001110363789350/6542589052"
+        android:layout_margin="10dp"
+        >
 
+    </com.google.android.gms.ads.AdView>
 
     <ImageView
         android:id="@+id/image_tv"

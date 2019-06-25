@@ -5,18 +5,21 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.google.android.material.navigation.NavigationView;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,7 +32,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     ImageView image_tv, image_radio, image_share, image_youtube, image_linkedin, image_facebook;
     String Tvurl, AudioURL;
-   // private AdView adView;
+  private AdView adView;
 
 
     @Override
@@ -41,6 +44,9 @@ public class MainActivity extends AppCompatActivity
 
         initView();
 
+        adView = findViewById(R.id.adView);
+        AdRequest request = new AdRequest.Builder().build();
+        adView.loadAd(request);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -50,26 +56,7 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
 
-        //MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
 
-
-       /* adView = findViewById(R.id.ad_view);
-
-
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .build();
-
-        adView.loadAd(adRequest);
-        MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
-
-        adView = findViewById(R.id.ad_view);
-
-         adRequest = new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .build();
-
-        adView.loadAd(adRequest);*/
     }
 
 
@@ -253,29 +240,5 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    @Override
-    public void onPause() {
-//        if (adView != null) {
-//            adView.pause();
-//        }
-        super.onPause();
-    }
 
-    /** Called when returning to the activity */
-    @Override
-    public void onResume() {
-        super.onResume();
-        /*if (adView != null) {
-            adView.resume();
-        }*/
-    }
-
-    /** Called before the activity is destroyed */
-    @Override
-    public void onDestroy() {
-        /*if (adView != null) {
-            adView.destroy();
-        }*/
-        super.onDestroy();
-    }
 }
