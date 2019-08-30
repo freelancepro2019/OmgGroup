@@ -21,9 +21,13 @@
        <!-- <meta-data
             android:name="com.elashry.omggroup"
             android:value="ca-app-pub-1001110363789350/6542589052"/>-->
-
-        <service android:name=".RadioService" android:enabled="true"
-            android:stopWithTask="false"/>
+        <meta-data
+            android:name="com.google.android.gms.ads.AD_MANAGER_APP"
+            android:value="true"/>
+        <service android:name=".RadioService"
+            android:enabled="true"
+            android:stopWithTask="false"
+            />
         <activity android:name=".AudioActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             >
