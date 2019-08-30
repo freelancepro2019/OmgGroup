@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -31,7 +32,7 @@ import static com.elashry.omggroup.Api.BASE_URL;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     ImageView image_tv, image_radio, image_share, image_youtube, image_linkedin, image_facebook;
-    String Tvurl, AudioURL;
+    String Tvurl="", AudioURL="";
   private AdView adView;
 
 
@@ -72,18 +73,31 @@ public class MainActivity extends AppCompatActivity
         image_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, TvActivity.class);
-                intent.putExtra("url", Tvurl);
-                startActivity(intent);
+                if (TextUtils.isEmpty(Tvurl)){
+                    Toast.makeText(MainActivity.this, "خطأ حاول مرة اخرى لاحقا", Toast.LENGTH_LONG).show();
+
+                }else {
+                    Intent intent = new Intent(MainActivity.this, TvActivity.class);
+                    intent.putExtra("url", Tvurl);
+                    startActivity(intent);
+                }
+
+
 
             }
         });
         image_radio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, AudioActivity.class);
-                intent.putExtra("url", AudioURL);
-                startActivity(intent);
+                if (TextUtils.isEmpty(AudioURL)){
+                    Toast.makeText(MainActivity.this, "خطأ حاول مرة اخرى لاحقا", Toast.LENGTH_LONG).show();
+
+                }else {
+                    Intent intent = new Intent(MainActivity.this, AudioActivity.class);
+                    intent.putExtra("url", AudioURL);
+                    startActivity(intent);
+                }
+
             }
         });
         image_facebook.setOnClickListener(new View.OnClickListener() {
