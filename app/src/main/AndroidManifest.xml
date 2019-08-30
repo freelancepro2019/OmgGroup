@@ -19,6 +19,16 @@
         tools:targetApi="m">
 
        <!-- <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_stat_ic_notification" />-->
+        <service
+            android:name=".Notification"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+       <!-- <meta-data
             android:name="com.elashry.omggroup"
             android:value="ca-app-pub-1001110363789350/6542589052"/>-->
         <meta-data

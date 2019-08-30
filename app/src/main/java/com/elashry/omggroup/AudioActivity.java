@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
@@ -71,10 +70,10 @@ public class AudioActivity extends AppCompatActivity {
         tv_1.setTypeface(typeface);
         tv_2.setTypeface(typeface);
 
-        Glide.with(this)
+        /*Glide.with(this)
                 .asGif()
                 .load("https://raw.githubusercontent.com/AhmedMohamedAllam/Omg-Group/master/OMG%20Group/app/waves.gif")
-                .into(image_gif);
+                .into(image_gif);*/
 
         image_play.setOnClickListener(new View.OnClickListener() {
             @Override

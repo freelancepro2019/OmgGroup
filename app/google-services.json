@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "300701740627",
+    "firebase_url": "https://oomg-f62d2.firebaseio.com",
+    "project_id": "oomg-f62d2",
+    "storage_bucket": "oomg-f62d2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:300701740627:android:f26f37655c2ae8d5",
+        "android_client_info": {
+          "package_name": "com.elashry.omggroup"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "300701740627-0njfurj90k7r4bvj19jomgv77foofoti.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgg8Xk9MRLOHxHOoLwSoDRA9kNH-U583I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "300701740627-0njfurj90k7r4bvj19jomgv77foofoti.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "300701740627-7fbglo5v70vktft7j7bm26oentupdh5v.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.omg.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
