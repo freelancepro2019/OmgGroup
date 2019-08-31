@@ -25,6 +25,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.squareup.picasso.Picasso;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,8 +37,9 @@ import static com.elashry.omggroup.Api.BASE_URL;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     ImageView image_tv, image_radio, image_share, image_youtube, image_linkedin, image_facebook;
-    String Tvurl="", AudioURL="";
+    String Tvurl="", AudioURL="",bg = "";
   private AdView adView;
+  private ImageView image;
 
 
     @Override
@@ -72,6 +74,7 @@ public class MainActivity extends AppCompatActivity
         image_youtube = findViewById(R.id.image_youtube);
         image_linkedin = findViewById(R.id.image_linkedin);
         image_facebook = findViewById(R.id.image_facebook);
+        image = findViewById(R.id.image);
 
 
         image_tv.setOnClickListener(new View.OnClickListener() {
@@ -83,6 +86,7 @@ public class MainActivity extends AppCompatActivity
                 }else {
                     Intent intent = new Intent(MainActivity.this, TvActivity.class);
                     intent.putExtra("url", Tvurl);
+                    intent.putExtra("bg",bg);
                     startActivity(intent);
                 }
 
@@ -99,6 +103,7 @@ public class MainActivity extends AppCompatActivity
                 }else {
                     Intent intent = new Intent(MainActivity.this, AudioActivity.class);
                     intent.putExtra("url", AudioURL);
+                    intent.putExtra("bg",bg);
                     startActivity(intent);
                 }
 
@@ -181,7 +186,18 @@ public class MainActivity extends AppCompatActivity
                 if (response.isSuccessful()) {
                     Tvurl = response.body().getTv_url();
                     AudioURL = response.body().getRadio_url();
+                    bg = response.body().getApp_background();
+                    Picasso.with(MainActivity.this).load(Uri.parse("http://admin.omgchannel.net/storage/"+bg)).fit().into(image, new com.squareup.picasso.Callback() {
+                        @Override
+                        public void onSuccess() {
 
+                        }
+
+                        @Override
+                        public void onError() {
+                            image.setImageResource(R.drawable.bg);
+                        }
+                    });
                 } else {
                     Toast.makeText(MainActivity.this, "خطأ حاول مرة اخرى لاحقا", Toast.LENGTH_LONG).show();
 

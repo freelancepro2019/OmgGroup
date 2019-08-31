@@ -14,19 +14,19 @@
         tools:context=".MainActivity"
         android:layout_gravity="center_vertical">
 
-        <com.universalvideoview.UniversalVideoView
+
+        <fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard
             android:id="@+id/videoView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
-            app:uvv_autoRotation="true"
-            app:uvv_fitXY="false" />
+            >
 
-        <com.universalvideoview.UniversalMediaController
-            android:id="@+id/media_controller"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:uvv_scalable="true" />
+        </fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard>
+
+
+
+
+
 
         <ProgressBar
             android:id="@+id/progBar"
