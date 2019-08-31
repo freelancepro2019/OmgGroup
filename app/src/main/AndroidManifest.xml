@@ -16,7 +16,9 @@
         tools:ignore="GoogleAppIndexingWarning"
         android:usesCleartextTraffic="true"
         android:name=".MyApplication"
-        tools:targetApi="m">
+        tools:targetApi="m"
+
+        >
 
        <!-- <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"

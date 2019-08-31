@@ -90,8 +90,8 @@ public class Notification extends FirebaseMessagingService {
     private void createOldVersionNotification(Bitmap bitmap) {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-        builder.setContentTitle(map.get("type")+" "+map.get("title"));
-        builder.setContentText(map.get("msg"));
+        builder.setContentTitle(map.get("title"));
+        builder.setContentText(map.get("type")+"-"+map.get("msg"));
         builder.setAutoCancel(true);
         builder.setSmallIcon(R.drawable.ic_notification);
         builder.setLargeIcon(bitmap);
@@ -128,8 +128,8 @@ public class Notification extends FirebaseMessagingService {
                 .setUsage(AudioAttributes.USAGE_NOTIFICATION).setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).
                 setLegacyStreamType(AudioManager.STREAM_NOTIFICATION).build());
         builder.setChannelId(CHANNEL_ID);
-        builder.setContentTitle(map.get("type")+" "+map.get("title"));
-        builder.setContentText(map.get("msg"));
+        builder.setContentTitle(map.get("title"));
+        builder.setContentText(map.get("type")+"-"+map.get("msg"));
         builder.setAutoCancel(true);
         builder.setLargeIcon(bitmap);
         builder.setSmallIcon(R.drawable.ic_notification);
