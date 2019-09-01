@@ -14,18 +14,10 @@
         tools:context=".MainActivity"
         android:layout_gravity="center_vertical">
 
-
-        <fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard
-            android:id="@+id/videoView"
+        <include
+            layout="@layout/mk_player"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
-
-        </fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard>
-
-
-
-
+            android:layout_height="match_parent" />
 
 
         <ProgressBar

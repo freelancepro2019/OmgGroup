@@ -76,6 +76,11 @@ public class AudioActivity extends AppCompatActivity {
                 .load("https://raw.githubusercontent.com/AhmedMohamedAllam/Omg-Group/master/OMG%20Group/app/waves.gif")
                 .into(image_gif);
 
+        play();
+        image_play.setImageResource(R.drawable.pause);
+        image_gif.setVisibility(View.VISIBLE);
+
+
         image_play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

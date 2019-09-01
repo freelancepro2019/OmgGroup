@@ -50,6 +50,7 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'fm.jiecao:jiecaovideoplayer:3.0_preview'
+    implementation 'com.github.khizar1556.MKVideoPlayer:mkvideoplayer:0.1.5'
 
 
 }
