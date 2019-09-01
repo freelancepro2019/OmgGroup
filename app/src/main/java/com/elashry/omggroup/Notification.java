@@ -93,6 +93,7 @@ public class Notification extends FirebaseMessagingService {
         builder.setLargeIcon(logo);
         builder.setStyle(new NotificationCompat.BigPictureStyle()
                 .bigPicture(bitmap)
+                .bigLargeIcon(null)
                 .setSummaryText(map.get("msg"))
                 .setBigContentTitle(map.get("title"))
         );
@@ -133,8 +134,10 @@ public class Notification extends FirebaseMessagingService {
         //builder.setContentText(map.get("msg"));
         builder.setAutoCancel(true);
         builder.setLargeIcon(logo);
+
         builder.setStyle(new NotificationCompat.BigPictureStyle()
                 .bigPicture(bitmap)
+                .bigLargeIcon(null)
                 .setSummaryText(map.get("msg"))
                 .setBigContentTitle(map.get("title"))
         );
