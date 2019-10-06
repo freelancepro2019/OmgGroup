@@ -37,9 +37,9 @@ import static com.elashry.omggroup.Api.BASE_URL;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     ImageView image_tv, image_radio, image_share, image_youtube, image_linkedin, image_facebook;
-    String Tvurl="", AudioURL="",bg = "";
-  private AdView adView;
-  private ImageView image;
+    String Tvurl = "", AudioURL = "", bg = "";
+    private AdView adView;
+    private ImageView image;
 
 
     @Override
@@ -58,7 +58,14 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, slideOffset);
+
+
+            }
+        };
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
@@ -80,16 +87,15 @@ public class MainActivity extends AppCompatActivity
         image_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (TextUtils.isEmpty(Tvurl)){
+                if (TextUtils.isEmpty(Tvurl)) {
                     Toast.makeText(MainActivity.this, "خطأ حاول مرة اخرى لاحقا", Toast.LENGTH_LONG).show();
 
-                }else {
+                } else {
                     Intent intent = new Intent(MainActivity.this, TvActivity.class);
                     intent.putExtra("url", Tvurl);
-                    intent.putExtra("bg",bg);
+                    intent.putExtra("bg", bg);
                     startActivity(intent);
                 }
-
 
 
             }
@@ -97,13 +103,13 @@ public class MainActivity extends AppCompatActivity
         image_radio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (TextUtils.isEmpty(AudioURL)){
+                if (TextUtils.isEmpty(AudioURL)) {
                     Toast.makeText(MainActivity.this, "خطأ حاول مرة اخرى لاحقا", Toast.LENGTH_LONG).show();
 
-                }else {
+                } else {
                     Intent intent = new Intent(MainActivity.this, AudioActivity.class);
                     intent.putExtra("url", AudioURL);
-                    intent.putExtra("bg",bg);
+                    intent.putExtra("bg", bg);
                     startActivity(intent);
                 }
 
@@ -155,9 +161,8 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
 
-                        if (task.isSuccessful())
-                        {
-                            Log.e("subscribed","true");
+                        if (task.isSuccessful()) {
+                            Log.e("subscribed", "true");
                         }
                     }
                 });
@@ -187,7 +192,7 @@ public class MainActivity extends AppCompatActivity
                     Tvurl = response.body().getTv_url();
                     AudioURL = response.body().getRadio_url();
                     bg = response.body().getApp_background();
-                    Picasso.with(MainActivity.this).load(Uri.parse("http://admin.omgchannel.net/storage/"+bg)).fit().into(image, new com.squareup.picasso.Callback() {
+                    Picasso.with(MainActivity.this).load(Uri.parse("http://admin.omgchannel.net/storage/" + bg)).fit().into(image, new com.squareup.picasso.Callback() {
                         @Override
                         public void onSuccess() {
 
@@ -240,8 +245,7 @@ public class MainActivity extends AppCompatActivity
                             intent.putExtra("url", Tvurl);
                             startActivity(intent);
                         }
-                    },300);
-
+                    }, 300);
 
 
         } else if (id == R.id.nav_radio) {
@@ -253,7 +257,7 @@ public class MainActivity extends AppCompatActivity
                             intent.putExtra("url", AudioURL);
                             startActivity(intent);
                         }
-                    },300);
+                    }, 300);
 
 
         } else if (id == R.id.nav_about) {
@@ -265,8 +269,7 @@ public class MainActivity extends AppCompatActivity
                             intent.setData(Uri.parse("http://omgchannel.net/OMG/About-Us"));
                             startActivity(intent);
                         }
-                    },300);
-
+                    }, 300);
 
 
         } else if (id == R.id.nav_advertise) {
@@ -278,7 +281,7 @@ public class MainActivity extends AppCompatActivity
                             intent.setData(Uri.parse("http://omgchannel.net/OMG?journal_blog_post_id=75"));
                             startActivity(intent);
                         }
-                    },300);
+                    }, 300);
 
 
         }
