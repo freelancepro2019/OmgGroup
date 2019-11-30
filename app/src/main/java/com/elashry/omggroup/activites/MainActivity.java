@@ -2,6 +2,7 @@ package com.elashry.omggroup.activites;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,14 +10,18 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -24,7 +29,9 @@ import com.elashry.omggroup.Api;
 import com.elashry.omggroup.BuildConfig;
 import com.elashry.omggroup.R;
 import com.elashry.omggroup.Services;
+import com.elashry.omggroup.models.AdsDataModel;
 import com.elashry.omggroup.models.responseModel;
+import com.elashry.omggroup.preference.Preference;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,20 +39,27 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.squareup.picasso.Picasso;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-import static com.elashry.omggroup.Api.BASE_URL;
-
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    ImageView image_tv, image_radio, image_share, image_youtube, image_linkedin, image_facebook;
-    String Tvurl = "", AudioURL = "", bg = "";
-    private AdView adView,adView2,adView3;
+
+    private ImageView image_tv, image_radio, image_share, image_youtube, image_linkedin, image_facebook;
+    private String Tvurl = "", AudioURL = "", bg = "";
+    private AdView adView, adView2, adView3;
     private ImageView image;
-    LinearLayout  nav_tv,nav_radio,nav_about,nav_advertise;
+    private LinearLayout nav_tv, nav_radio, nav_about, nav_advertise;
+    private ImageView imageAd,image2Ad;
+    private ProgressBar progBarAd,progBar2Ad;
+    private TextView tvAd,tv2Ad,tvTitleAd1,tvTitleAd2;
+    private FrameLayout flAd1,flAd2;
+    private Preference preference;
+    private AdsDataModel.ItemModel itemModel=null;
+
 
 
     @Override
@@ -61,18 +75,14 @@ public class MainActivity extends AppCompatActivity
         AdRequest request = new AdRequest.Builder().build();
         adView.loadAd(request);
 
-        adView2 = findViewById(R.id.adView2);
+        /*adView2 = findViewById(R.id.adView2);
         AdRequest request2 = new AdRequest.Builder().addTestDevice("fa8dbbcb682699544e4e8f2212115f73")
                 .build();
-        adView2.loadAd(request2);
+        adView2.loadAd(request2);*/
 
-        adView3 = findViewById(R.id.adView3);
-        AdRequest request3 = new AdRequest.Builder().addTestDevice("fa8dbbcb682699544e4e8f2212115f73")
-                .build();
-        adView3.loadAd(request3);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-       // NavigationView navigationView = findViewById(R.id.nav_view);
+        // NavigationView navigationView = findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             @Override
@@ -84,23 +94,42 @@ public class MainActivity extends AppCompatActivity
         };
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-      //  navigationView.setNavigationItemSelectedListener(this);
+        //  navigationView.setNavigationItemSelectedListener(this);
 
 
     }
 
 
     private void initView() {
+        preference = Preference.newInstance();
         image_tv = findViewById(R.id.image_tv);
         image_radio = findViewById(R.id.image_radio);
         image_share = findViewById(R.id.image_share);
         image_youtube = findViewById(R.id.image_youtube);
         image_linkedin = findViewById(R.id.image_linkedin);
         image_facebook = findViewById(R.id.image_facebook);
-        nav_tv=findViewById(R.id.nav_tv);
-        nav_radio=findViewById(R.id.nav_radio);
-        nav_about=findViewById(R.id.nav_about);
-        nav_advertise=findViewById(R.id.nav_advertise);
+        nav_tv = findViewById(R.id.nav_tv);
+        nav_radio = findViewById(R.id.nav_radio);
+        nav_about = findViewById(R.id.nav_about);
+        nav_advertise = findViewById(R.id.nav_advertise);
+
+
+        imageAd = findViewById(R.id.imageAd);
+        image2Ad = findViewById(R.id.image2Ad);
+        progBarAd = findViewById(R.id.progBarAd);
+        progBar2Ad = findViewById(R.id.progBar2Ad);
+        tvAd = findViewById(R.id.tvAd);
+        tv2Ad = findViewById(R.id.tv2Ad);
+        tvTitleAd1 = findViewById(R.id.tvTitleAd1);
+        tvTitleAd2 = findViewById(R.id.tvTitleAd2);
+
+        flAd1 = findViewById(R.id.flAd1);
+        flAd2 = findViewById(R.id.flAd2);
+
+
+        progBarAd.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this,R.color.blue), PorterDuff.Mode.SRC_IN);
+        progBar2Ad.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this,R.color.blue), PorterDuff.Mode.SRC_IN);
+
 
         image = findViewById(R.id.image);
 
@@ -244,9 +273,30 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
 
+        flAd1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (itemModel!=null)
+                {
+                    Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse(itemModel.getEvents().getClick().get(0).getValue().getUrl()));
+                    startActivity(intent);
+                }
+            }
+        });
+
+        flAd2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (itemModel!=null)
+                {
+                    Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse(itemModel.getEvents().getClick().get(0).getValue().getUrl()));
+                    startActivity(intent);
+                }
+            }
+        });
 
         getData();
-
+        getAds();
 
     }
 
@@ -257,7 +307,7 @@ public class MainActivity extends AppCompatActivity
         dialog.setMessage("إنتظر قليلا...");
         dialog.show();
 
-        Retrofit retrofit = Api.getClient(BASE_URL);
+        Retrofit retrofit = Api.getClient("http://admin.omgchannel.net/");
         Services services = retrofit.create(Services.class);
         Call<responseModel> call = services.getData();
         call.enqueue(new Callback<responseModel>() {
@@ -290,6 +340,72 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onFailure(Call<responseModel> call, Throwable t) {
                 dialog.dismiss();
+
+                Toast.makeText(MainActivity.this, "تحقق من الاتصال بالانترنت", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void getAds()
+    {
+        String id = preference.getUserId(this);
+        Retrofit retrofit = Api.getClient("https://recommendation.speakol.com/");
+        Services services = retrofit.create(Services.class);
+        Call<AdsDataModel> call = services.getAdsData("wi-4071","fa8dbbcb682699544e4e8f2212115f73",id);
+        call.enqueue(new Callback<AdsDataModel>() {
+            @Override
+            public void onResponse(Call<AdsDataModel> call, Response<AdsDataModel> response) {
+
+                if (response.isSuccessful()&&response.body()!=null) {
+
+                    if (response.body().getPayload()!=null&&response.body().getPayload().getItems()!=null)
+                    {
+                        if (response.body().getPayload().getItems().get(0)!=null)
+                        {
+                            tvAd.setVisibility(View.GONE);
+                            tv2Ad.setVisibility(View.GONE);
+                            itemModel = response.body().getPayload().getItems().get(0);
+
+                            tvTitleAd1.setText(response.body().getPayload().getItems().get(0).getTitle());
+                            tvTitleAd2.setText(response.body().getPayload().getItems().get(0).getTitle());
+
+                            Picasso.with(MainActivity.this).load(Uri.parse(response.body().getPayload().getItems().get(0).getMedia().getUrl())).fit().into(imageAd, new com.squareup.picasso.Callback() {
+                                @Override
+                                public void onSuccess() {
+                                    progBarAd.setVisibility(View.GONE);
+                                }
+
+                                @Override
+                                public void onError() {
+                                    progBarAd.setVisibility(View.GONE);
+
+                                }
+                            });
+
+                            Picasso.with(MainActivity.this).load(Uri.parse(response.body().getPayload().getItems().get(0).getMedia().getUrl())).fit().into(image2Ad, new com.squareup.picasso.Callback() {
+                                @Override
+                                public void onSuccess() {
+                                    progBar2Ad.setVisibility(View.GONE);
+                                }
+
+                                @Override
+                                public void onError() {
+                                    progBar2Ad.setVisibility(View.GONE);
+
+                                }
+                            });
+
+                        }
+                    }
+
+                } else {
+                    Toast.makeText(MainActivity.this, "خطأ حاول مرة اخرى لاحقا", Toast.LENGTH_LONG).show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AdsDataModel> call, Throwable t) {
 
                 Toast.makeText(MainActivity.this, "تحقق من الاتصال بالانترنت", Toast.LENGTH_LONG).show();
             }

@@ -40,42 +40,160 @@
             android:layout_gravity="center"
 
             />
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_gravity="bottom"
-            android:weightSum="2"
+            android:layout_marginBottom="15dp"
+
 
             >
-
-            <com.google.android.gms.ads.AdView
-                android:id="@+id/adView"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+            <LinearLayout
+                android:layout_width="170dp"
                 android:layout_height="wrap_content"
-                ads:adSize="BANNER"
-                ads:adUnitId="ca-app-pub-1001110363789350/6542589052"
-                android:layout_margin="10dp"
-                android:gravity="left"
+                android:orientation="vertical"
+                android:gravity="center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
 
                 >
+                <FrameLayout
+                    android:id="@+id/flAd1"
 
-            </com.google.android.gms.ads.AdView>
-            <com.google.android.gms.ads.AdView
-                android:id="@+id/adView2"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginTop="8dp"
+                    >
+                    <TextView
+                        android:id="@+id/tvAd"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/ad_container_bg"
+                        android:textColor="@color/colorPrimary"
+                        android:text="Ad"
+                        android:gravity="center"
+                        android:textSize="20sp"
+                        android:clickable="false"
+                        android:longClickable="false"
+
+                        />
+                    <ImageView
+                        android:id="@+id/imageAd"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:clickable="false"
+                        android:longClickable="false"
+                        />
+                    <ProgressBar
+                        android:id="@+id/progBarAd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:clickable="false"
+                        android:longClickable="false"
+                        />
+                    <ImageView
+                        android:id="@+id/imgDelete1"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_remove"
+                        android:tint="@color/gray"
+                        android:layout_margin="3dp"
+                        android:visibility="gone"
+                        />
+                </FrameLayout>
+                <TextView
+                    android:id="@+id/tvTitleAd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="170dp"
                 android:layout_height="wrap_content"
-                ads:adSize="BANNER"
-                ads:adUnitId="ca-app-pub-1001110363789350/6542589052"
-                android:layout_margin="10dp"
-                android:layout_marginBottom="30dp"
-                android:gravity="right"
-                >
+                android:orientation="vertical"
+                android:gravity="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
 
-            </com.google.android.gms.ads.AdView>
-        </LinearLayout>
+                >
+                <FrameLayout
+                    android:id="@+id/flAd2"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginTop="8dp"
+                    >
+                    <TextView
+                        android:id="@+id/tvAd2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/ad_container_bg"
+                        android:textColor="@color/colorPrimary"
+                        android:text="Ad"
+                        android:gravity="center"
+                        android:textSize="20sp"
+                        android:clickable="false"
+                        android:longClickable="false"
+
+                        />
+                    <ImageView
+                        android:id="@+id/imageAd2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:clickable="false"
+                        android:longClickable="false"
+                        />
+                    <ProgressBar
+                        android:id="@+id/progBarAd2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:clickable="false"
+                        android:longClickable="false"
+                        />
+                    <ImageView
+                        android:id="@+id/imgDelete2"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_remove"
+                        android:tint="@color/gray"
+                        android:layout_margin="3dp"
+                        android:visibility="gone"
+                        />
+                </FrameLayout>
+                <TextView
+                    android:id="@+id/tvTitleAd2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+
+                    />
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         <FrameLayout

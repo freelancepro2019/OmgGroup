@@ -15,14 +15,24 @@ import android.widget.MediaController;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.elashry.omggroup.Api;
 import com.elashry.omggroup.R;
-import com.google.android.gms.ads.AdRequest;
+import com.elashry.omggroup.Services;
+import com.elashry.omggroup.models.AdsDataModel;
+import com.elashry.omggroup.preference.Preference;
 import com.google.android.gms.ads.AdView;
+import com.squareup.picasso.Picasso;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 
 public class TvActivity extends AppCompatActivity {
@@ -40,6 +50,14 @@ public class TvActivity extends AppCompatActivity {
     private boolean isNormal = true;
     private AdView adView,adView2;
 
+    private ProgressBar progBarAd,progBarAd2;
+    private TextView tvAd,tvAd2,tvTitleAd,tvTitleAd2;
+    private ImageView imageAd,imageAd2;
+    private Preference preference;
+    private FrameLayout flAd1,flAd2;
+    private AdsDataModel.ItemModel itemModel=null;
+    private ImageView imgDelete1,imgDelete2;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,18 +67,19 @@ public class TvActivity extends AppCompatActivity {
         getDataFromIntent();
 
         initView();
-        adView = findViewById(R.id.adView);
-        AdRequest request = new AdRequest.Builder().build();
-        adView.loadAd(request);
-
-        adView2 = findViewById(R.id.adView2);
-        AdRequest request2 = new AdRequest.Builder().addTestDevice("fa8dbbcb682699544e4e8f2212115f73")
-                .build();
-        adView2.loadAd(request2);
+//        adView = findViewById(R.id.adView);
+//        AdRequest request = new AdRequest.Builder().build();
+//        adView.loadAd(request);
+//
+//        adView2 = findViewById(R.id.adView2);
+//        AdRequest request2 = new AdRequest.Builder().addTestDevice("fa8dbbcb682699544e4e8f2212115f73")
+//                .build();
+//        adView2.loadAd(request2);
 
     }
 
     private void initView() {
+        preference = Preference.newInstance();
 
         mediaController = new MediaController(this);
         flAd = findViewById(R.id.flAd);
@@ -80,6 +99,66 @@ public class TvActivity extends AppCompatActivity {
         image.setImageResource(R.drawable.bg);
 
         videoView.measure(videoView.getMeasuredWidth() + 100, videoView.getMeasuredHeight() + 100);
+
+        progBarAd = findViewById(R.id.progBarAd);
+        progBarAd2 = findViewById(R.id.progBarAd2);
+
+        tvAd = findViewById(R.id.tvAd);
+        tvAd2 = findViewById(R.id.tvAd2);
+
+        tvTitleAd = findViewById(R.id.tvTitleAd);
+        tvTitleAd2 = findViewById(R.id.tvTitleAd2);
+
+        imageAd = findViewById(R.id.imageAd);
+        imageAd2 = findViewById(R.id.imageAd2);
+
+        imgDelete1 = findViewById(R.id.imgDelete1);
+        imgDelete2 = findViewById(R.id.imgDelete2);
+
+        flAd1 = findViewById(R.id.flAd1);
+        flAd2 = findViewById(R.id.flAd2);
+
+        flAd1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (itemModel!=null)
+                {
+                    Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse(itemModel.getEvents().getClick().get(0).getValue().getUrl()));
+                    startActivity(intent);
+                }
+            }
+        });
+
+        flAd2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (itemModel!=null)
+                {
+                    Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse(itemModel.getEvents().getClick().get(0).getValue().getUrl()));
+                    startActivity(intent);
+                }
+            }
+        });
+
+        imgDelete1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                flAd1.setVisibility(View.GONE);
+                tvTitleAd.setVisibility(View.GONE);
+            }
+        });
+
+        imgDelete2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                flAd2.setVisibility(View.GONE);
+                tvTitleAd2.setVisibility(View.GONE);
+
+
+            }
+        });
+
         videoView.setVideoURI(Uri.parse(url));
         videoView.start();
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -122,7 +201,79 @@ public class TvActivity extends AppCompatActivity {
             }
         });
 
+        getAds();
         //startTimer();
+    }
+
+    private void getAds()
+    {
+        String id = preference.getUserId(this);
+        Retrofit retrofit = Api.getClient("https://recommendation.speakol.com/");
+        Services services = retrofit.create(Services.class);
+        Call<AdsDataModel> call = services.getAdsData("wi-4071","fa8dbbcb682699544e4e8f2212115f73",id);
+        call.enqueue(new Callback<AdsDataModel>() {
+            @Override
+            public void onResponse(Call<AdsDataModel> call, Response<AdsDataModel> response) {
+
+                if (response.isSuccessful()&&response.body()!=null) {
+
+                    if (response.body().getPayload()!=null&&response.body().getPayload().getItems()!=null)
+                    {
+                        if (response.body().getPayload().getItems().get(0)!=null)
+                        {
+                            itemModel = response.body().getPayload().getItems().get(0);
+
+                            tvAd.setVisibility(View.GONE);
+                            tvAd2.setVisibility(View.GONE);
+
+                            tvTitleAd.setText(response.body().getPayload().getItems().get(0).getTitle());
+                            tvTitleAd2.setText(response.body().getPayload().getItems().get(0).getTitle());
+
+                            Picasso.with(TvActivity.this).load(Uri.parse(response.body().getPayload().getItems().get(0).getMedia().getUrl())).fit().into(imageAd, new com.squareup.picasso.Callback() {
+                                @Override
+                                public void onSuccess() {
+                                    progBarAd.setVisibility(View.GONE);
+                                    imgDelete1.setVisibility(View.VISIBLE);
+                                }
+
+                                @Override
+                                public void onError() {
+                                    progBarAd.setVisibility(View.GONE);
+
+                                }
+                            });
+                            Picasso.with(TvActivity.this).load(Uri.parse(response.body().getPayload().getItems().get(0).getMedia().getUrl())).fit().into(imageAd2, new com.squareup.picasso.Callback() {
+                                @Override
+                                public void onSuccess() {
+                                    progBarAd2.setVisibility(View.GONE);
+                                    imgDelete2.setVisibility(View.VISIBLE);
+
+                                }
+
+                                @Override
+                                public void onError() {
+                                    progBarAd2.setVisibility(View.GONE);
+
+                                }
+                            });
+
+
+
+                        }
+                    }
+
+                } else {
+                    Toast.makeText(TvActivity.this, "خطأ حاول مرة اخرى لاحقا", Toast.LENGTH_LONG).show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AdsDataModel> call, Throwable t) {
+
+                Toast.makeText(TvActivity.this, "تحقق من الاتصال بالانترنت", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void startTimer() {
