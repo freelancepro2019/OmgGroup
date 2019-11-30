@@ -1,4 +1,4 @@
-package com.elashry.omggroup;
+package com.elashry.omggroup.activites;
 
 import android.app.ActivityManager;
 import android.content.Intent;
@@ -13,6 +13,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.elashry.omggroup.R;
+import com.elashry.omggroup.RadioService;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
@@ -24,7 +26,7 @@ public class AudioActivity extends AppCompatActivity {
     private TextView tv_1,tv_2;
     private Typeface typeface;
 
-    private AdView adView;
+    private AdView adView,adView2;
 
     MediaPlayer mediaplayer;
     @Override
@@ -39,6 +41,10 @@ public class AudioActivity extends AppCompatActivity {
         AdRequest request = new AdRequest.Builder().build();
         adView.loadAd(request);
 
+        adView2 = findViewById(R.id.adView2);
+        AdRequest request2 = new AdRequest.Builder().addTestDevice("fa8dbbcb682699544e4e8f2212115f73")
+                .build();
+        adView2.loadAd(request2);
 
     }
 
@@ -124,7 +130,7 @@ public class AudioActivity extends AppCompatActivity {
     private void play()
     {
 
-        Intent intent = new Intent(this,RadioService.class);
+        Intent intent = new Intent(this, RadioService.class);
         intent.putExtra("url",AudioURL);
         startService(intent);
     }

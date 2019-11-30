@@ -1,9 +1,9 @@
-package com.elashry.omggroup;
+package com.elashry.omggroup.models;
 
 public class responseModel {
 
-
     private String tv_url;
+
     private String radio_url;
     private String app_background;
 

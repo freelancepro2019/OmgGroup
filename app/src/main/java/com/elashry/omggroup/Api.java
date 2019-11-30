@@ -11,6 +11,7 @@ public class Api {
 
     private static Retrofit retrofit = null;
     public static final String BASE_URL = "http://admin.omgchannel.net/";
+    public static final String ADS_URL = "https://recommendation.speakol.com/api/v2/widgets/";
 
     public static Retrofit getClient(String BaseUrl) {
         if (retrofit==null) {

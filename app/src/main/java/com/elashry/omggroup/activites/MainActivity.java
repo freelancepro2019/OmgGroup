@@ -1,4 +1,4 @@
-package com.elashry.omggroup;
+package com.elashry.omggroup.activites;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.elashry.omggroup.Api;
+import com.elashry.omggroup.BuildConfig;
+import com.elashry.omggroup.R;
+import com.elashry.omggroup.Services;
+import com.elashry.omggroup.models.responseModel;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,7 +32,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.squareup.picasso.Picasso;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,8 +43,9 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     ImageView image_tv, image_radio, image_share, image_youtube, image_linkedin, image_facebook;
     String Tvurl = "", AudioURL = "", bg = "";
-    private AdView adView;
+    private AdView adView,adView2,adView3;
     private ImageView image;
+    LinearLayout  nav_tv,nav_radio,nav_about,nav_advertise;
 
 
     @Override
@@ -55,8 +61,18 @@ public class MainActivity extends AppCompatActivity
         AdRequest request = new AdRequest.Builder().build();
         adView.loadAd(request);
 
+        adView2 = findViewById(R.id.adView2);
+        AdRequest request2 = new AdRequest.Builder().addTestDevice("fa8dbbcb682699544e4e8f2212115f73")
+                .build();
+        adView2.loadAd(request2);
+
+        adView3 = findViewById(R.id.adView3);
+        AdRequest request3 = new AdRequest.Builder().addTestDevice("fa8dbbcb682699544e4e8f2212115f73")
+                .build();
+        adView3.loadAd(request3);
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+       // NavigationView navigationView = findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             @Override
@@ -68,7 +84,7 @@ public class MainActivity extends AppCompatActivity
         };
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        navigationView.setNavigationItemSelectedListener(this);
+      //  navigationView.setNavigationItemSelectedListener(this);
 
 
     }
@@ -81,6 +97,11 @@ public class MainActivity extends AppCompatActivity
         image_youtube = findViewById(R.id.image_youtube);
         image_linkedin = findViewById(R.id.image_linkedin);
         image_facebook = findViewById(R.id.image_facebook);
+        nav_tv=findViewById(R.id.nav_tv);
+        nav_radio=findViewById(R.id.nav_radio);
+        nav_about=findViewById(R.id.nav_about);
+        nav_advertise=findViewById(R.id.nav_advertise);
+
         image = findViewById(R.id.image);
 
 
@@ -153,6 +174,62 @@ public class MainActivity extends AppCompatActivity
                 } catch (Exception e) {
                     //e.toString();
                 }
+            }
+        });
+        nav_tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new Handler()
+                        .postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent intent = new Intent(MainActivity.this, TvActivity.class);
+                                intent.putExtra("url", Tvurl);
+                                startActivity(intent);
+                            }
+                        }, 300);
+            }
+        });
+        nav_radio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new Handler()
+                        .postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent intent = new Intent(MainActivity.this, AudioActivity.class);
+                                intent.putExtra("url", AudioURL);
+                                startActivity(intent);
+                            }
+                        }, 300);
+            }
+        });
+        nav_about.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new Handler()
+                        .postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                                intent.setData(Uri.parse("http://omgchannel.net/OMG/About-Us"));
+                                startActivity(intent);
+                            }
+                        }, 300);
+            }
+        });
+        nav_advertise.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new Handler()
+                        .postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                                intent.setData(Uri.parse("http://omgchannel.net/OMG?journal_blog_post_id=75"));
+                                startActivity(intent);
+                            }
+                        }, 300);
             }
         });
 
@@ -234,7 +311,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
+       /* int id = item.getItemId();
 
         if (id == R.id.nav_tv) {
             new Handler()
@@ -284,7 +361,7 @@ public class MainActivity extends AppCompatActivity
                     }, 300);
 
 
-        }
+        }*/
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

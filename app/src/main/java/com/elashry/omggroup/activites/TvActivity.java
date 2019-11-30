@@ -1,4 +1,4 @@
-package com.elashry.omggroup;
+package com.elashry.omggroup.activites;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -20,6 +20,10 @@ import android.widget.VideoView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.elashry.omggroup.R;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 
 public class TvActivity extends AppCompatActivity {
 
@@ -34,6 +38,7 @@ public class TvActivity extends AppCompatActivity {
     private CountDownTimer adsTime, timer;
     private MediaController mediaController;
     private boolean isNormal = true;
+    private AdView adView,adView2;
 
 
     @Override
@@ -44,7 +49,14 @@ public class TvActivity extends AppCompatActivity {
         getDataFromIntent();
 
         initView();
+        adView = findViewById(R.id.adView);
+        AdRequest request = new AdRequest.Builder().build();
+        adView.loadAd(request);
 
+        adView2 = findViewById(R.id.adView2);
+        AdRequest request2 = new AdRequest.Builder().addTestDevice("fa8dbbcb682699544e4e8f2212115f73")
+                .build();
+        adView2.loadAd(request2);
 
     }
 

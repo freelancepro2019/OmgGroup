@@ -1,4 +1,4 @@
-package com.elashry.omggroup;
+package com.elashry.omggroup.models;
 
 import java.io.Serializable;
 

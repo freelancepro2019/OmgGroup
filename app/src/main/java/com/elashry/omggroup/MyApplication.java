@@ -5,9 +5,7 @@ import android.app.Application;
 import com.google.android.gms.ads.MobileAds;
 
 
-/**
- * Created by ravi on 25/12/17.
- */
+
 
 public class MyApplication extends Application {
 
