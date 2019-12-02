@@ -166,9 +166,12 @@ public class AudioActivity extends AppCompatActivity {
                 image_gif.setVisibility(View.INVISIBLE);
 
             }
-
-        getAds();
-
+        if (ads==false){
+            flAd1.setVisibility(View.GONE);
+        }
+        else {
+            getAds();
+        }
     }
 
 
@@ -189,10 +192,7 @@ public class AudioActivity extends AppCompatActivity {
                         if (response.body().getPayload().getItems().get(0)!=null)
                         {
                             itemModel = response.body().getPayload().getItems().get(0);
-                            if (ads==false){
-                                flAd1.setVisibility(View.GONE);
-                            }
-                            else {
+
                                 flAd1.setVisibility(View.VISIBLE);
 
                                 //   tvTitleAd.setText(response.body().getPayload().getItems().get(0).getTitle());
@@ -217,7 +217,7 @@ public class AudioActivity extends AppCompatActivity {
 
 
                         }
-                    }
+
 
                 } else {
                     Toast.makeText(AudioActivity.this, "خطأ حاول مرة اخرى لاحقا", Toast.LENGTH_LONG).show();

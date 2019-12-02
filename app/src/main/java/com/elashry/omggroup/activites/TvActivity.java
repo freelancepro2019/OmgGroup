@@ -204,9 +204,13 @@ public class TvActivity extends AppCompatActivity {
                 }
             }
         });
-
+        if (ads==false){
+            flAd1.setVisibility(View.GONE);
+        }
+        else {
         getAds();
-        //startTimer();
+        }
+        //startTimer();}
     }
 
     private void getAds()
@@ -227,10 +231,7 @@ public class TvActivity extends AppCompatActivity {
                         {
                             itemModel = response.body().getPayload().getItems().get(0);
 
-                            if (ads==false){
-                                flAd1.setVisibility(View.GONE);
-                            }
-                            else {
+
 
                                 flAd1.setVisibility(View.VISIBLE);
 
@@ -252,7 +253,7 @@ public class TvActivity extends AppCompatActivity {
 
                                 }
                             });
-                            }
+
                            /* Picasso.with(TvActivity.this).load(Uri.parse(response.body().getPayload().getItems().get(0).getMedia().getUrl())).fit().into(imageAd2, new com.squareup.picasso.Callback() {
                                 @Override
                                 public void onSuccess() {

@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getData();
 
         initView();
 
@@ -126,8 +127,7 @@ public class MainActivity extends AppCompatActivity
 
         flAd1 = findViewById(R.id.flAd1);
         flAd2 = findViewById(R.id.flAd2);
-        flAd1.setVisibility(View.GONE);
-        flAd2.setVisibility(View.GONE);
+
 
         progBarAd.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this,R.color.blue), PorterDuff.Mode.SRC_IN);
         progBar2Ad.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this,R.color.blue), PorterDuff.Mode.SRC_IN);
@@ -135,8 +135,9 @@ public class MainActivity extends AppCompatActivity
 
         image = findViewById(R.id.image);
 
-        getData();
-        getAds();
+
+        Log.e("adddddddd",ads+"");
+
 
         image_tv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -325,7 +326,16 @@ public class MainActivity extends AppCompatActivity
                     AudioURL = response.body().getRadio_url();
                     bg = response.body().getApp_background();
                     ads=false;
-                    Log.e("ads",ads+"");
+                    if (ads==false){
+                        flAd1.setVisibility(View.GONE);
+                        flAd2.setVisibility(View.GONE);
+
+                    }
+                    else
+                    {
+                        getAds();
+                    }
+                    Log.e("ad",ads+"");
                     Picasso.with(MainActivity.this).load(Uri.parse("http://admin.omgchannel.net/storage/" + bg)).fit().into(image, new com.squareup.picasso.Callback() {
                         @Override
                         public void onSuccess() {
@@ -371,13 +381,7 @@ public class MainActivity extends AppCompatActivity
                         {
                             itemModel = response.body().getPayload().getItems().get(0);
 
-                            if (ads==false){
-                                flAd1.setVisibility(View.GONE);
-                                flAd2.setVisibility(View.GONE);
 
-                            }
-                            else
-                            {
 
                                 flAd1.setVisibility(View.VISIBLE);
                                 flAd2.setVisibility(View.VISIBLE);
@@ -415,7 +419,7 @@ public class MainActivity extends AppCompatActivity
 
 
                         }
-                    }
+
 
                 } else {
                     Toast.makeText(MainActivity.this, "خطأ حاول مرة اخرى لاحقا", Toast.LENGTH_LONG).show();
