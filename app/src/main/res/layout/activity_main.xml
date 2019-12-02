@@ -155,6 +155,7 @@
                         android:layout_marginEnd="10dp"
                         android:layout_marginTop="20dp"
                         android:layout_gravity="center_horizontal"
+                       android:visibility="gone"
                         >
                         <TextView
                             android:id="@+id/tvAd"
@@ -185,7 +186,7 @@
                             android:longClickable="false"
                             />
                     </FrameLayout>
-                    <TextView
+           <!--         <TextView
                         android:id="@+id/tvTitleAd1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -198,7 +199,7 @@
                         android:layout_marginEnd="10dp"
                         android:maxLines="2"
                         android:ellipsize="end"
-                        />
+                        />-->
 
                 </LinearLayout>
 

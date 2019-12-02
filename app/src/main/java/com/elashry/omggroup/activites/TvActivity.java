@@ -28,6 +28,7 @@ import com.elashry.omggroup.models.AdsDataModel;
 import com.elashry.omggroup.preference.Preference;
 import com.google.android.gms.ads.AdView;
 import com.squareup.picasso.Picasso;
+import com.elashry.omggroup.activites.MainActivity;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -38,6 +39,7 @@ import retrofit2.Retrofit;
 public class TvActivity extends AppCompatActivity {
 
     private String url, bg = "";
+    private Boolean ads;
     private VideoView videoView;
     private FrameLayout flAd;
     private RelativeLayout app_video_box;
@@ -54,7 +56,7 @@ public class TvActivity extends AppCompatActivity {
     private TextView tvAd,tvAd2,tvTitleAd,tvTitleAd2;
     private ImageView imageAd,imageAd2;
     private Preference preference;
-    private FrameLayout flAd1,flAd2;
+    private FrameLayout flAd1;
     private AdsDataModel.ItemModel itemModel=null;
     private ImageView imgDelete1,imgDelete2;
 
@@ -101,22 +103,24 @@ public class TvActivity extends AppCompatActivity {
         videoView.measure(videoView.getMeasuredWidth() + 100, videoView.getMeasuredHeight() + 100);
 
         progBarAd = findViewById(R.id.progBarAd);
-        progBarAd2 = findViewById(R.id.progBarAd2);
+       // progBarAd2 = findViewById(R.id.progBarAd2);
 
         tvAd = findViewById(R.id.tvAd);
-        tvAd2 = findViewById(R.id.tvAd2);
+     //   tvAd2 = findViewById(R.id.tvAd2);
 
-        tvTitleAd = findViewById(R.id.tvTitleAd);
-        tvTitleAd2 = findViewById(R.id.tvTitleAd2);
+       // tvTitleAd = findViewById(R.id.tvTitleAd);
+       // tvTitleAd2 = findViewById(R.id.tvTitleAd2);
 
         imageAd = findViewById(R.id.imageAd);
-        imageAd2 = findViewById(R.id.imageAd2);
+      //  imageAd2 = findViewById(R.id.imageAd2);
 
         imgDelete1 = findViewById(R.id.imgDelete1);
-        imgDelete2 = findViewById(R.id.imgDelete2);
+       // imgDelete2 = findViewById(R.id.imgDelete2);
 
         flAd1 = findViewById(R.id.flAd1);
-        flAd2 = findViewById(R.id.flAd2);
+      //  flAd2 = findViewById(R.id.flAd2);
+        flAd1.setVisibility(View.GONE);
+
 
         flAd1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,7 +133,7 @@ public class TvActivity extends AppCompatActivity {
             }
         });
 
-        flAd2.setOnClickListener(new View.OnClickListener() {
+      /*  flAd2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -139,25 +143,25 @@ public class TvActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
             }
-        });
+        });*/
 
         imgDelete1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 flAd1.setVisibility(View.GONE);
-                tvTitleAd.setVisibility(View.GONE);
+              //  tvTitleAd.setVisibility(View.GONE);
             }
         });
 
-        imgDelete2.setOnClickListener(new View.OnClickListener() {
+     /*   imgDelete2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                flAd2.setVisibility(View.GONE);
+              //  flAd2.setVisibility(View.GONE);
                 tvTitleAd2.setVisibility(View.GONE);
 
 
             }
-        });
+        });*/
 
         videoView.setVideoURI(Uri.parse(url));
         videoView.start();
@@ -223,11 +227,17 @@ public class TvActivity extends AppCompatActivity {
                         {
                             itemModel = response.body().getPayload().getItems().get(0);
 
-                            tvAd.setVisibility(View.GONE);
-                            tvAd2.setVisibility(View.GONE);
+                            if (ads==false){
+                                flAd1.setVisibility(View.GONE);
+                            }
+                            else {
 
-                            tvTitleAd.setText(response.body().getPayload().getItems().get(0).getTitle());
-                            tvTitleAd2.setText(response.body().getPayload().getItems().get(0).getTitle());
+                                flAd1.setVisibility(View.VISIBLE);
+
+                                //  tvAd2.setVisibility(View.GONE);
+
+                         //   tvTitleAd.setText(response.body().getPayload().getItems().get(0).getTitle());
+                           // tvTitleAd2.setText(response.body().getPayload().getItems().get(0).getTitle());
 
                             Picasso.with(TvActivity.this).load(Uri.parse(response.body().getPayload().getItems().get(0).getMedia().getUrl())).fit().into(imageAd, new com.squareup.picasso.Callback() {
                                 @Override
@@ -242,21 +252,22 @@ public class TvActivity extends AppCompatActivity {
 
                                 }
                             });
-                            Picasso.with(TvActivity.this).load(Uri.parse(response.body().getPayload().getItems().get(0).getMedia().getUrl())).fit().into(imageAd2, new com.squareup.picasso.Callback() {
+                            }
+                           /* Picasso.with(TvActivity.this).load(Uri.parse(response.body().getPayload().getItems().get(0).getMedia().getUrl())).fit().into(imageAd2, new com.squareup.picasso.Callback() {
                                 @Override
                                 public void onSuccess() {
-                                    progBarAd2.setVisibility(View.GONE);
-                                    imgDelete2.setVisibility(View.VISIBLE);
+                                 //   progBarAd2.setVisibility(View.GONE);
+                                   // imgDelete2.setVisibility(View.VISIBLE);
 
                                 }
 
                                 @Override
                                 public void onError() {
-                                    progBarAd2.setVisibility(View.GONE);
+                                  //  progBarAd2.setVisibility(View.GONE);
 
                                 }
                             });
-
+*/
 
 
                         }
@@ -340,6 +351,7 @@ public class TvActivity extends AppCompatActivity {
         if (intent != null) {
             url = intent.getStringExtra("url");
             bg = intent.getStringExtra("bg");
+            ads=intent.getBooleanExtra("ads",false);
 
         }
     }

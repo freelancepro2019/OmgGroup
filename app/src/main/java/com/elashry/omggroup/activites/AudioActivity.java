@@ -40,6 +40,7 @@ public class AudioActivity extends AppCompatActivity {
     private String  AudioURL;
     private TextView tv_1,tv_2;
     private Typeface typeface;
+    private Boolean ads;
 
     private AdView adView;
 
@@ -101,9 +102,11 @@ public class AudioActivity extends AppCompatActivity {
 
         progBarAd = findViewById(R.id.progBarAd);
         tvAd = findViewById(R.id.tvAd);
-        tvTitleAd = findViewById(R.id.tvTitleAd);
+      //  tvTitleAd = findViewById(R.id.tvTitleAd);
         imageAd = findViewById(R.id.imageAd);
         flAd1 = findViewById(R.id.flAd1);
+
+
         flAd1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -186,22 +189,30 @@ public class AudioActivity extends AppCompatActivity {
                         if (response.body().getPayload().getItems().get(0)!=null)
                         {
                             itemModel = response.body().getPayload().getItems().get(0);
+                            if (ads==false){
+                                flAd1.setVisibility(View.GONE);
+                            }
+                            else {
+                                flAd1.setVisibility(View.VISIBLE);
 
-                            tvAd.setVisibility(View.GONE);
-                            tvTitleAd.setText(response.body().getPayload().getItems().get(0).getTitle());
+                                //   tvTitleAd.setText(response.body().getPayload().getItems().get(0).getTitle());
 
-                            Picasso.with(AudioActivity.this).load(Uri.parse(response.body().getPayload().getItems().get(0).getMedia().getUrl())).fit().into(imageAd, new com.squareup.picasso.Callback() {
-                                @Override
-                                public void onSuccess() {
-                                    progBarAd.setVisibility(View.GONE);
-                                }
 
-                                @Override
-                                public void onError() {
-                                    progBarAd.setVisibility(View.GONE);
+                                Picasso.with(AudioActivity.this).load(Uri.parse(response.body().getPayload().getItems().get(0).getMedia().getUrl())).fit().into(imageAd, new com.squareup.picasso.Callback() {
+                                    @Override
+                                    public void onSuccess() {
+                                        progBarAd.setVisibility(View.GONE);
+                                    }
 
-                                }
-                            });
+                                    @Override
+                                    public void onError() {
+                                        progBarAd.setVisibility(View.GONE);
+
+                                    }
+                                });
+                            }
+
+
 
 
 
@@ -226,6 +237,7 @@ public class AudioActivity extends AppCompatActivity {
 
         Intent intent = new Intent(AudioActivity.this, RadioService.class);
         intent.putExtra("url",AudioURL);
+
         startService(intent);
 
     }
@@ -256,6 +268,8 @@ public class AudioActivity extends AppCompatActivity {
         if (intent!=null)
         {
             AudioURL =  intent.getStringExtra("url");
+            ads=intent.getBooleanExtra("ads",false);
+
         }
     }
 

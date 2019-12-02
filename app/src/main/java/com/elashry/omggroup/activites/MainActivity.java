@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity
     private FrameLayout flAd1,flAd2;
     private Preference preference;
     private AdsDataModel.ItemModel itemModel=null;
+    private Boolean ads=false;
 
 
 
@@ -120,12 +121,13 @@ public class MainActivity extends AppCompatActivity
         progBar2Ad = findViewById(R.id.progBar2Ad);
         tvAd = findViewById(R.id.tvAd);
         tv2Ad = findViewById(R.id.tv2Ad);
-        tvTitleAd1 = findViewById(R.id.tvTitleAd1);
-        tvTitleAd2 = findViewById(R.id.tvTitleAd2);
+       // tvTitleAd1 = findViewById(R.id.tvTitleAd1);
+       // tvTitleAd2 = findViewById(R.id.tvTitleAd2);
 
         flAd1 = findViewById(R.id.flAd1);
         flAd2 = findViewById(R.id.flAd2);
-
+        flAd1.setVisibility(View.GONE);
+        flAd2.setVisibility(View.GONE);
 
         progBarAd.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this,R.color.blue), PorterDuff.Mode.SRC_IN);
         progBar2Ad.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this,R.color.blue), PorterDuff.Mode.SRC_IN);
@@ -133,6 +135,8 @@ public class MainActivity extends AppCompatActivity
 
         image = findViewById(R.id.image);
 
+        getData();
+        getAds();
 
         image_tv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,6 +148,7 @@ public class MainActivity extends AppCompatActivity
                     Intent intent = new Intent(MainActivity.this, TvActivity.class);
                     intent.putExtra("url", Tvurl);
                     intent.putExtra("bg", bg);
+                    intent.putExtra("ads",ads);
                     startActivity(intent);
                 }
 
@@ -160,6 +165,7 @@ public class MainActivity extends AppCompatActivity
                     Intent intent = new Intent(MainActivity.this, AudioActivity.class);
                     intent.putExtra("url", AudioURL);
                     intent.putExtra("bg", bg);
+                    intent.putExtra("ads",ads);
                     startActivity(intent);
                 }
 
@@ -295,8 +301,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        getData();
-        getAds();
+
 
     }
 
@@ -319,6 +324,8 @@ public class MainActivity extends AppCompatActivity
                     Tvurl = response.body().getTv_url();
                     AudioURL = response.body().getRadio_url();
                     bg = response.body().getApp_background();
+                    ads=false;
+                    Log.e("ads",ads+"");
                     Picasso.with(MainActivity.this).load(Uri.parse("http://admin.omgchannel.net/storage/" + bg)).fit().into(image, new com.squareup.picasso.Callback() {
                         @Override
                         public void onSuccess() {
@@ -362,38 +369,50 @@ public class MainActivity extends AppCompatActivity
                     {
                         if (response.body().getPayload().getItems().get(0)!=null)
                         {
-                            tvAd.setVisibility(View.GONE);
-                            tv2Ad.setVisibility(View.GONE);
                             itemModel = response.body().getPayload().getItems().get(0);
 
-                            tvTitleAd1.setText(response.body().getPayload().getItems().get(0).getTitle());
-                            tvTitleAd2.setText(response.body().getPayload().getItems().get(0).getTitle());
+                            if (ads==false){
+                                flAd1.setVisibility(View.GONE);
+                                flAd2.setVisibility(View.GONE);
 
-                            Picasso.with(MainActivity.this).load(Uri.parse(response.body().getPayload().getItems().get(0).getMedia().getUrl())).fit().into(imageAd, new com.squareup.picasso.Callback() {
-                                @Override
-                                public void onSuccess() {
-                                    progBarAd.setVisibility(View.GONE);
-                                }
+                            }
+                            else
+                            {
 
-                                @Override
-                                public void onError() {
-                                    progBarAd.setVisibility(View.GONE);
+                                flAd1.setVisibility(View.VISIBLE);
+                                flAd2.setVisibility(View.VISIBLE);
 
-                                }
-                            });
+                                // tvTitleAd1.setText(response.body().getPayload().getItems().get(0).getTitle());
+                                //  tvTitleAd2.setText(response.body().getPayload().getItems().get(0).getTitle());
 
-                            Picasso.with(MainActivity.this).load(Uri.parse(response.body().getPayload().getItems().get(0).getMedia().getUrl())).fit().into(image2Ad, new com.squareup.picasso.Callback() {
-                                @Override
-                                public void onSuccess() {
-                                    progBar2Ad.setVisibility(View.GONE);
-                                }
+                                Picasso.with(MainActivity.this).load(Uri.parse(response.body().getPayload().getItems().get(0).getMedia().getUrl())).fit().into(imageAd, new com.squareup.picasso.Callback() {
+                                    @Override
+                                    public void onSuccess() {
+                                        progBarAd.setVisibility(View.GONE);
+                                    }
 
-                                @Override
-                                public void onError() {
-                                    progBar2Ad.setVisibility(View.GONE);
+                                    @Override
+                                    public void onError() {
+                                        progBarAd.setVisibility(View.GONE);
 
-                                }
-                            });
+                                    }
+                                });
+
+                                Picasso.with(MainActivity.this).load(Uri.parse(response.body().getPayload().getItems().get(0).getMedia().getUrl())).fit().into(image2Ad, new com.squareup.picasso.Callback() {
+                                    @Override
+                                    public void onSuccess() {
+                                        progBar2Ad.setVisibility(View.GONE);
+                                    }
+
+                                    @Override
+                                    public void onError() {
+                                        progBar2Ad.setVisibility(View.GONE);
+
+                                    }
+                                });
+
+                            }
+
 
                         }
                     }
