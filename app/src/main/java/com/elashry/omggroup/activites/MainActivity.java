@@ -69,13 +69,14 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getData();
 
-        initView();
 
         adView = findViewById(R.id.adView);
         AdRequest request = new AdRequest.Builder().build();
         adView.loadAd(request);
+        getData();
+
+        initView();
 
         /*adView2 = findViewById(R.id.adView2);
         AdRequest request2 = new AdRequest.Builder().addTestDevice("fa8dbbcb682699544e4e8f2212115f73")
@@ -325,7 +326,7 @@ public class MainActivity extends AppCompatActivity
                     Tvurl = response.body().getTv_url();
                     AudioURL = response.body().getRadio_url();
                     bg = response.body().getApp_background();
-                    ads=false;
+                    ads=response.body().getAds();
                     if (ads==false){
                         flAd1.setVisibility(View.GONE);
                         flAd2.setVisibility(View.GONE);
@@ -389,6 +390,7 @@ public class MainActivity extends AppCompatActivity
                                 // tvTitleAd1.setText(response.body().getPayload().getItems().get(0).getTitle());
                                 //  tvTitleAd2.setText(response.body().getPayload().getItems().get(0).getTitle());
 
+                            Log.e("img",response.body().getPayload().getItems().get(0).getMedia().getUrl());
                                 Picasso.with(MainActivity.this).load(Uri.parse(response.body().getPayload().getItems().get(0).getMedia().getUrl())).fit().into(imageAd, new com.squareup.picasso.Callback() {
                                     @Override
                                     public void onSuccess() {

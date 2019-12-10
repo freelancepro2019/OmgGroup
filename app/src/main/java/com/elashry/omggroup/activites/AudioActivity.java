@@ -59,11 +59,11 @@ public class AudioActivity extends AppCompatActivity {
         setContentView(R.layout.activity_audio);
         getDataFromIntent();
         typeface = Typeface.createFromAsset(getAssets(),"ar.otf");
-        initView();
 
         adView = findViewById(R.id.adView);
         AdRequest request = new AdRequest.Builder().build();
         adView.loadAd(request);
+        initView();
 
 
 
