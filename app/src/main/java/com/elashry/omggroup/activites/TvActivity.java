@@ -26,7 +26,12 @@ import com.elashry.omggroup.R;
 import com.elashry.omggroup.Services;
 import com.elashry.omggroup.models.AdsDataModel;
 import com.elashry.omggroup.preference.Preference;
+import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.reward.RewardItem;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.squareup.picasso.Picasso;
 import com.elashry.omggroup.activites.MainActivity;
 
@@ -59,6 +64,7 @@ public class TvActivity extends AppCompatActivity {
     private FrameLayout flAd1;
     private AdsDataModel.ItemModel itemModel=null;
     private ImageView imgDelete1,imgDelete2;
+    private RewardedVideoAd mRewardedVideoAd;
 
 
     @Override
@@ -120,8 +126,13 @@ public class TvActivity extends AppCompatActivity {
         flAd1 = findViewById(R.id.flAd1);
       //  flAd2 = findViewById(R.id.flAd2);
         flAd1.setVisibility(View.GONE);
+        MobileAds.initialize(this, "ca-app-pub-1001110363789350~7595359427");
 
-
+        //RewardedVideoAd
+      /*  mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
+        mRewardedVideoAd.loadAd("ca-app-pub-1001110363789350/5402443645", new AdRequest.Builder().build());
+        mRewardedVideoAd.setRewardedVideoAdListener(rewardedVideoAdListener);
+*/
         flAd1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -212,6 +223,55 @@ public class TvActivity extends AppCompatActivity {
         }
         //startTimer();}
     }
+
+    public void showRewardedAd(View view) {
+        if (mRewardedVideoAd != null && mRewardedVideoAd.isLoaded()) {
+            mRewardedVideoAd.show();
+        }
+    }
+    RewardedVideoAdListener rewardedVideoAdListener = new RewardedVideoAdListener() {
+        @Override
+        public void onRewardedVideoAdLoaded() {
+            Toast.makeText(TvActivity.this, "onRewardedVideoAdLoaded", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onRewardedVideoAdOpened() {
+            Toast.makeText(TvActivity.this, "onRewardedVideoAdOpened", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onRewardedVideoStarted() {
+            Toast.makeText(TvActivity.this, "onRewardedVideoStarted", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onRewardedVideoAdClosed() {
+            Toast.makeText(TvActivity.this, "onRewardedVideoAdClosed", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onRewarded(RewardItem rewardItem) {
+            String msg = "onRewarded! currency: " + rewardItem.getType() + "  amount: " + rewardItem.getAmount();
+            Toast.makeText(TvActivity.this, msg, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onRewardedVideoAdLeftApplication() {
+            Toast.makeText(TvActivity.this, "onRewardedVideoAdLeftApplication", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onRewardedVideoAdFailedToLoad(int i) {
+            Toast.makeText(TvActivity.this, "onRewardedVideoAdFailedToLoad", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onRewardedVideoCompleted() {
+            Toast.makeText(TvActivity.this, "onRewardedVideoCompleted", Toast.LENGTH_SHORT).show();
+
+        }
+    };
 
     private void getAds()
     {

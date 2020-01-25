@@ -3,6 +3,7 @@ package com.elashry.omggroup;
 
 
 import com.elashry.omggroup.models.AdsDataModel;
+import com.elashry.omggroup.models.VideoAdsModel;
 import com.elashry.omggroup.models.responseModel;
 
 import retrofit2.Call;
@@ -22,5 +23,6 @@ public interface Services {
                                   @Query("user_id") String user_id
                                   );
 
-
+    @GET("api/lists")
+    Call<VideoAdsModel> getVideoAds();
 }
