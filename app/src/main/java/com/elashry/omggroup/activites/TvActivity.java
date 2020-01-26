@@ -8,6 +8,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -25,15 +26,17 @@ import com.elashry.omggroup.Api;
 import com.elashry.omggroup.R;
 import com.elashry.omggroup.Services;
 import com.elashry.omggroup.models.AdsDataModel;
+import com.elashry.omggroup.models.VideoAdsModel;
 import com.elashry.omggroup.preference.Preference;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.reward.RewardItem;
 import com.google.android.gms.ads.reward.RewardedVideoAd;
 import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.squareup.picasso.Picasso;
-import com.elashry.omggroup.activites.MainActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,13 +48,13 @@ public class TvActivity extends AppCompatActivity {
 
     private String url, bg = "";
     private Boolean ads;
-    private VideoView videoView;
+    private VideoView videoView,videoViewAds;
     private FrameLayout flAd;
     private RelativeLayout app_video_box;
     private ImageView image, imgOrientation;
-    private ProgressBar progBar, progBarLoad;
+    private ProgressBar progBar, progBarLoad,progBarLoad2;
     private TextView tvCounter;
-    private MediaPlayer mp;
+    private MediaPlayer mp,mp2;
     private CountDownTimer adsTime, timer;
     private MediaController mediaController;
     private boolean isNormal = true;
@@ -65,6 +68,10 @@ public class TvActivity extends AppCompatActivity {
     private AdsDataModel.ItemModel itemModel=null;
     private ImageView imgDelete1,imgDelete2;
     private RewardedVideoAd mRewardedVideoAd;
+    private final String VIDEO = "http://admin.omgchannel.net/storage/";
+    private List<VideoAdsModel.Video> videoList;
+    private int period =20;
+    private int currentVideoIndex = 0;
 
 
     @Override
@@ -87,6 +94,7 @@ public class TvActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        videoList = new ArrayList<>();
         preference = Preference.newInstance();
 
         mediaController = new MediaController(this);
@@ -101,6 +109,10 @@ public class TvActivity extends AppCompatActivity {
 
         tvCounter = findViewById(R.id.tvCounter);
         videoView = findViewById(R.id.videoView);
+
+        progBarLoad2 = findViewById(R.id.progBarLoad2);
+        videoViewAds = findViewById(R.id.videoViewAds);
+
 
         mediaController.setAnchorView(videoView);
         videoView.setMediaController(mediaController);
@@ -198,6 +210,8 @@ public class TvActivity extends AppCompatActivity {
                         return false;
                     }
                 });
+
+
             }
         });
 
@@ -221,7 +235,92 @@ public class TvActivity extends AppCompatActivity {
         else {
         getAds();
         }
+
+        getVideoAds();
+
+        currentVideoIndex++;
+
+
+
+        videoViewAds.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+
+                currentVideoIndex++;
+
+                if (currentVideoIndex>=videoList.size())
+                {
+
+                    currentVideoIndex = 0;
+                    startTimer(period);
+
+                }
+
+                videoViewAds.setVideoURI(Uri.parse(VIDEO+videoList.get(currentVideoIndex).getDownloadLink()));
+                videoViewAds.start();
+
+            }
+        });
+
+
+        videoViewAds.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                progBarLoad2.setVisibility(View.GONE);
+                mp.setOnInfoListener(new MediaPlayer.OnInfoListener() {
+                    @Override
+                    public boolean onInfo(MediaPlayer mp, int what, int extra) {
+                        if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
+                            progBarLoad2.setVisibility(View.VISIBLE);
+                        } else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
+                            progBarLoad2.setVisibility(View.GONE);
+
+                        }
+
+
+                        return false;
+                    }
+                });
+
+
+            }
+        });
+
+
         //startTimer();}
+    }
+
+    private void getVideoAds()
+    {
+
+        Retrofit retrofit = Api.getClient("http://admin.omgchannel.net/");
+        Services services = retrofit.create(Services.class);
+        Call<List<VideoAdsModel>> call = services.getVideoAds();
+        call.enqueue(new Callback<List<VideoAdsModel>>() {
+            @Override
+            public void onResponse(Call<List<VideoAdsModel>> call, Response<List<VideoAdsModel>> response) {
+                if (response.isSuccessful()&&response.body()!=null) {
+
+                    Log.e("2","2");
+
+                    period = response.body().get(0).getPeriod();
+                    videoList.clear();
+
+                    videoList.addAll(response.body().get(0).getVideos());
+                    startTimer(period);
+
+                } else {
+
+                    Toast.makeText(TvActivity.this,"فشل", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<VideoAdsModel>> call, Throwable t) {
+                Log.e("error",t.getMessage()+"__");
+                Toast.makeText(TvActivity.this, "تحقق من الاتصال بالانترنت", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     public void showRewardedAd(View view) {
@@ -348,8 +447,12 @@ public class TvActivity extends AppCompatActivity {
         });
     }
 
-    private void startTimer() {
-        timer = new CountDownTimer(30000, 1000) {
+    private void startTimer(int time) {
+        videoViewAds.setVisibility(View.GONE);
+        progBarLoad2.setVisibility(View.VISIBLE);
+        videoView.start();
+
+        timer = new CountDownTimer(1000*time, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
 
@@ -357,15 +460,28 @@ public class TvActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                app_video_box.setVisibility(View.GONE);
-                flAd.setVisibility(View.VISIBLE);
+
+                Log.e("1","1");
+                if (videoList.size()>0)
+                {
+                    videoViewAds.setVisibility(View.VISIBLE);
+                    currentVideoIndex = 0;
+                    videoView.pause();
+                    progBarLoad.setVisibility(View.GONE);
+
+                    String urlVideo = VIDEO+videoList.get(0).getDownloadLink();
+                    videoViewAds.setVideoURI(Uri.parse(urlVideo));
+                    videoViewAds.start();
+                }
+
+
                 //startAdsTimer();
 
 
             }
         };
 
-        //timer.start();
+        timer.start();
 
     }
 

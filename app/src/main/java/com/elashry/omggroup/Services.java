@@ -6,6 +6,8 @@ import com.elashry.omggroup.models.AdsDataModel;
 import com.elashry.omggroup.models.VideoAdsModel;
 import com.elashry.omggroup.models.responseModel;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -24,5 +26,5 @@ public interface Services {
                                   );
 
     @GET("api/lists")
-    Call<VideoAdsModel> getVideoAds();
+    Call<List<VideoAdsModel>> getVideoAds();
 }
