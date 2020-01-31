@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.MediaController;
@@ -48,7 +50,9 @@ public class TvActivity extends AppCompatActivity {
 
     private String url, bg = "";
     private Boolean ads;
-    private VideoView videoView,videoViewAds;
+    private VideoView videoViewAds;//,videoView
+    private WebView webView;
+
     private FrameLayout flAd;
     private RelativeLayout app_video_box;
     private ImageView image, imgOrientation;
@@ -72,6 +76,7 @@ public class TvActivity extends AppCompatActivity {
     private List<VideoAdsModel.Video> videoList;
     private int period =20;
     private int currentVideoIndex = 0;
+    private boolean isVideoStarted = false;
 
 
     @Override
@@ -94,31 +99,37 @@ public class TvActivity extends AppCompatActivity {
     }
 
     private void initView() {
+
         videoList = new ArrayList<>();
         preference = Preference.newInstance();
 
         mediaController = new MediaController(this);
+
         flAd = findViewById(R.id.flAd);
         app_video_box = findViewById(R.id.app_video_box);
         image = findViewById(R.id.image);
         imgOrientation = findViewById(R.id.imgOrientation);
+
 
         progBar = findViewById(R.id.progBar);
         progBarLoad = findViewById(R.id.progBarLoad);
         progBarLoad.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, R.color.blue), PorterDuff.Mode.SRC_IN);
 
         tvCounter = findViewById(R.id.tvCounter);
-        videoView = findViewById(R.id.videoView);
+
+        //videoView = findViewById(R.id.videoView);
+        webView = findViewById(R.id.videoView);
 
         progBarLoad2 = findViewById(R.id.progBarLoad2);
         videoViewAds = findViewById(R.id.videoViewAds);
 
 
-        mediaController.setAnchorView(videoView);
-        videoView.setMediaController(mediaController);
+        Log.e("url",url);
+        /*mediaController.setAnchorView(videoView);
+        videoView.setMediaController(mediaController);*////////////
         image.setImageResource(R.drawable.bg);
 
-        videoView.measure(videoView.getMeasuredWidth() + 100, videoView.getMeasuredHeight() + 100);
+        /////videoView.measure(videoView.getMeasuredWidth() + 100, videoView.getMeasuredHeight() + 100);
 
         progBarAd = findViewById(R.id.progBarAd);
        // progBarAd2 = findViewById(R.id.progBarAd2);
@@ -186,34 +197,7 @@ public class TvActivity extends AppCompatActivity {
             }
         });*/
 
-        videoView.setVideoURI(Uri.parse(url));
-        videoView.start();
-        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                TvActivity.this.mp = mp;
-                progBarLoad.setVisibility(View.GONE);
-                float ratio = (float) videoView.getWidth() / videoView.getHeight();
 
-                videoView.measure(videoView.getWidth(), (int) (videoView.getHeight() * ratio));
-                mp.setOnInfoListener(new MediaPlayer.OnInfoListener() {
-                    @Override
-                    public boolean onInfo(MediaPlayer mp, int what, int extra) {
-                        if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
-                            progBarLoad.setVisibility(View.GONE);
-                        } else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
-                            progBarLoad.setVisibility(View.GONE);
-
-                        }
-
-
-                        return false;
-                    }
-                });
-
-
-            }
-        });
 
 
         imgOrientation.setOnClickListener(new View.OnClickListener() {
@@ -238,9 +222,7 @@ public class TvActivity extends AppCompatActivity {
 
         getVideoAds();
 
-        currentVideoIndex++;
-
-
+       /* currentVideoIndex++;
 
         videoViewAds.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
@@ -260,7 +242,8 @@ public class TvActivity extends AppCompatActivity {
                 videoViewAds.start();
 
             }
-        });
+        });*/
+
 
 
         videoViewAds.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -301,27 +284,188 @@ public class TvActivity extends AppCompatActivity {
             public void onResponse(Call<List<VideoAdsModel>> call, Response<List<VideoAdsModel>> response) {
                 if (response.isSuccessful()&&response.body()!=null) {
 
-                    Log.e("2","2");
 
                     period = response.body().get(0).getPeriod();
                     videoList.clear();
 
+
                     videoList.addAll(response.body().get(0).getVideos());
-                    startTimer(period);
+
+                    playVideo();
+
+
+
 
                 } else {
 
+                    playVideo();
                     Toast.makeText(TvActivity.this,"فشل", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<List<VideoAdsModel>> call, Throwable t) {
+                playVideo();
                 Log.e("error",t.getMessage()+"__");
                 Toast.makeText(TvActivity.this, "تحقق من الاتصال بالانترنت", Toast.LENGTH_LONG).show();
             }
         });
     }
+
+    private void playVideo()
+    {
+
+        webView.getSettings().setBuiltInZoomControls(false);
+        webView.getSettings().setDisplayZoomControls(false);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.loadUrl(url);
+        webView.setWebViewClient(new WebViewClient(){
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                progBarLoad.setVisibility(View.GONE);
+                webView.onResume();
+                if (videoList.size()>0)
+                {
+                    startTimer(period);
+
+                }
+            }
+        });
+
+
+
+       /* videoView.setVideoURI(Uri.parse(url));
+
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                if (!isVideoStarted)
+                {
+                    videoView.start();
+
+                }else
+                    {
+                        videoView.resume();
+                    }
+
+                if (videoList.size()>0)
+                {
+                    startTimer(period);
+
+                }
+
+                isVideoStarted = true;
+                TvActivity.this.mp = mp;
+
+                videoViewAds.setVisibility(View.GONE);
+                progBarLoad.setVisibility(View.GONE);
+
+               *//* float ratio = (float) videoView.getWidth() / videoView.getHeight();
+
+                videoView.measure(videoView.getWidth(), (int) (videoView.getHeight() * ratio));
+          *//*      mp.setOnInfoListener(new MediaPlayer.OnInfoListener() {
+                    @Override
+                    public boolean onInfo(MediaPlayer mp, int what, int extra) {
+                        if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
+                            progBarLoad.setVisibility(View.GONE);
+                        } else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
+                            progBarLoad.setVisibility(View.GONE);
+
+                        }
+
+
+                        return false;
+                    }
+                });
+
+
+            }
+        });*/
+    }
+    private void playVideoAds() {
+
+
+        videoViewAds.setVisibility(View.VISIBLE);
+        currentVideoIndex = 0;
+        webView.setVisibility(View.GONE);
+        //videoView.setVisibility(View.GONE);
+        progBarLoad.setVisibility(View.GONE);
+        webView.onPause();
+        //videoView.pause();
+        String urlVideo = VIDEO+videoList.get(currentVideoIndex).getDownloadLink();
+        videoViewAds.setVideoURI(Uri.parse(urlVideo));
+        videoViewAds.start();
+
+        videoViewAds.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(final MediaPlayer mp) {
+                currentVideoIndex++;
+
+                if (currentVideoIndex<videoList.size())
+                {
+                    String urlVideo = VIDEO+videoList.get(currentVideoIndex).getDownloadLink();
+                    videoViewAds.setVideoURI(Uri.parse(urlVideo));
+                    videoViewAds.start();
+                }else
+                {
+                    currentVideoIndex = 0;
+                    videoViewAds.setVisibility(View.GONE);
+                    progBarLoad2.setVisibility(View.GONE);
+
+                    Log.e("1","1");
+                    webView.setVisibility(View.VISIBLE);
+                    //videoView.setVisibility(View.VISIBLE);
+
+                    //videoView.resume();
+
+
+
+
+                    if (videoList.size()>0)
+                    {
+                        startTimer(period);
+
+                    }
+                }
+            }
+        });
+    }
+
+    private void startTimer(int time) {
+        Log.e("time",time+"__");
+
+        videoViewAds.setVisibility(View.GONE);
+        progBarLoad2.setVisibility(View.GONE);
+
+        timer = new CountDownTimer(1000*time, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+                if (videoList.size()>0)
+                {
+                    playVideoAds();
+                }
+
+
+
+
+            }
+        };
+
+        timer.start();
+
+    }
+
+
+
+
 
     public void showRewardedAd(View view) {
         if (mRewardedVideoAd != null && mRewardedVideoAd.isLoaded()) {
@@ -447,43 +591,6 @@ public class TvActivity extends AppCompatActivity {
         });
     }
 
-    private void startTimer(int time) {
-        videoViewAds.setVisibility(View.GONE);
-        progBarLoad2.setVisibility(View.GONE);
-        videoView.start();
-
-        timer = new CountDownTimer(1000*time, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-
-            }
-
-            @Override
-            public void onFinish() {
-
-                Log.e("1","1");
-                if (videoList.size()>0)
-                {
-                    videoViewAds.setVisibility(View.VISIBLE);
-                    currentVideoIndex = 0;
-                    videoView.pause();
-                    progBarLoad.setVisibility(View.GONE);
-
-                    String urlVideo = VIDEO+videoList.get(0).getDownloadLink();
-                    videoViewAds.setVideoURI(Uri.parse(urlVideo));
-                    videoViewAds.start();
-                }
-
-
-                //startAdsTimer();
-
-
-            }
-        };
-
-        timer.start();
-
-    }
 
 
     @Override
@@ -564,4 +671,6 @@ public class TvActivity extends AppCompatActivity {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             }
     }
+
+
 }
