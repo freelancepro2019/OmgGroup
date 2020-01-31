@@ -200,7 +200,7 @@ public class TvActivity extends AppCompatActivity {
                     @Override
                     public boolean onInfo(MediaPlayer mp, int what, int extra) {
                         if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
-                            progBarLoad.setVisibility(View.VISIBLE);
+                            progBarLoad.setVisibility(View.GONE);
                         } else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
                             progBarLoad.setVisibility(View.GONE);
 
@@ -449,7 +449,7 @@ public class TvActivity extends AppCompatActivity {
 
     private void startTimer(int time) {
         videoViewAds.setVisibility(View.GONE);
-        progBarLoad2.setVisibility(View.VISIBLE);
+        progBarLoad2.setVisibility(View.GONE);
         videoView.start();
 
         timer = new CountDownTimer(1000*time, 1000) {
