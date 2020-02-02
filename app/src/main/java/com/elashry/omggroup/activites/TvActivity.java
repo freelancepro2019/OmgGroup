@@ -654,6 +654,11 @@ public class TvActivity extends AppCompatActivity {
         super.onResume();
         webView.setVisibility(View.VISIBLE);
         webView.onResume();
+        if (videoList.size()>0)
+        {
+            startTimer(period);
+
+        }
 
     }
 
