@@ -325,7 +325,6 @@ public class TvActivity extends AppCompatActivity {
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 progBarLoad.setVisibility(View.GONE);
-                webView.onResume();
                 if (videoList.size()>0)
                 {
                     startTimer(period);
@@ -418,6 +417,7 @@ public class TvActivity extends AppCompatActivity {
                     webView.setVisibility(View.VISIBLE);
                     //videoView.setVisibility(View.VISIBLE);
 
+                    webView.onResume();
                     //videoView.resume();
 
 
@@ -643,9 +643,19 @@ public class TvActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-
+        webView.onPause();
+        videoViewAds.pause();
+        videoViewAds.setVisibility(View.GONE);
+        progBarLoad2.setVisibility(View.GONE);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        webView.setVisibility(View.VISIBLE);
+        webView.onResume();
+
+    }
 
     @Override
     protected void onDestroy() {
@@ -660,6 +670,8 @@ public class TvActivity extends AppCompatActivity {
 
 
     }
+
+
 
     @Override
     public void onBackPressed() {
