@@ -3,6 +3,7 @@ package com.elashry.omggroup;
 
 
 import com.elashry.omggroup.models.AdsDataModel;
+import com.elashry.omggroup.models.ImageAdsModel;
 import com.elashry.omggroup.models.VideoAdsModel;
 import com.elashry.omggroup.models.responseModel;
 
@@ -27,4 +28,7 @@ public interface Services {
 
     @GET("api/lists")
     Call<List<VideoAdsModel>> getVideoAds();
+
+    @GET("api/image-ads")
+    Call<List<ImageAdsModel>> getImgAds();
 }

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="#000">
+
     <FrameLayout
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_gravity="center_vertical"
         android:background="#000000"
-        tools:context=".activites.MainActivity"
-        android:layout_gravity="center_vertical">
+        tools:context=".activites.MainActivity">
 
 
         <WebView
@@ -19,19 +19,38 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:background="@color/colorPrimary"
-            />
+            android:background="@color/colorPrimary" />
+
+        <LinearLayout
+            android:id="@+id/Lin_imgAds"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/advertising"
+                android:textColor="@color/white"
+                android:textSize="9sp" />
+
+            <ImageView
+                android:id="@+id/imgads"
+                android:layout_width="70dp"
+                android:layout_height="90dp"
+                android:padding="10dp" />
+
+        </LinearLayout>
 
 
         <ImageView
-            android:id="@+id/imgOrientation"
-            android:layout_width="50dp"
+            android:id="@+id/imgLogo"
+            android:layout_width="150dp"
             android:layout_height="50dp"
-            android:layout_margin="20dp"
-            android:src="@drawable/ic_orientaton"
-            android:tint="@color/white"
-            android:padding="10dp"
-            />
+            android:layout_gravity="end"
+            android:layout_margin="10dp"
+            android:padding="5dp"
+            android:visibility="gone" />
 
         <ProgressBar
             android:id="@+id/progBarLoad"
@@ -40,155 +59,176 @@
             android:layout_gravity="center"
 
             />
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_gravity="bottom"
-            android:layout_marginBottom="15dp"
+            android:orientation="horizontal"
 
 
             >
+
             <LinearLayout
                 android:layout_width="170dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:gravity="center"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:orientation="vertical"
+                ads:layout_constraintBottom_toBottomOf="parent"
+                ads:layout_constraintStart_toStartOf="parent"
+                ads:layout_constraintTop_toTopOf="parent"
 
                 >
+
                 <FrameLayout
                     android:id="@+id/flAd1"
 
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
                     android:layout_marginTop="8dp"
-                    >
+                    android:layout_marginEnd="10dp"
+                    android:visibility="gone">
+
                     <TextView
                         android:id="@+id/tvAd"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@drawable/ad_container_bg"
-                        android:textColor="@color/colorPrimary"
-                        android:text="Ad"
-                        android:gravity="center"
-                        android:textSize="20sp"
                         android:clickable="false"
+                        android:gravity="center"
                         android:longClickable="false"
+                        android:text="Ad"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="20sp"
 
                         />
+
                     <ImageView
                         android:id="@+id/imageAd"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:clickable="false"
-                        android:longClickable="false"
-                        />
+                        android:longClickable="false" />
+
                     <ProgressBar
                         android:id="@+id/progBarAd"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:clickable="false"
-                        android:longClickable="false"
-                        />
+                        android:longClickable="false" />
+
                     <ImageView
                         android:id="@+id/imgDelete1"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
+                        android:layout_margin="3dp"
                         android:src="@drawable/ic_remove"
                         android:tint="@color/gray"
-                        android:layout_margin="3dp"
-                        android:visibility="gone"
-                        />
+                        android:visibility="gone" />
                 </FrameLayout>
-             <!--   <TextView
-                    android:id="@+id/tvTitleAd"
+
+                <TextClock
+                    android:id="@+id/tvClock"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="10dp"
+                    android:ellipsize="end"
+                    android:maxLines="2"
                     android:textColor="@color/white"
                     android:textSize="15sp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:maxLines="2"
-                    android:ellipsize="end"
+                    android:visibility="gone"
 
-                    />-->
+                    />
+
+
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvHashtag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="10dp"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                android:visibility="gone"
+                ads:layout_constraintBottom_toBottomOf="parent"
+                ads:layout_constraintEnd_toEndOf="parent"
+                ads:layout_constraintTop_toTopOf="parent" />
+
             <LinearLayout
                 android:layout_width="170dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:gravity="center"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:orientation="vertical"
+                ads:layout_constraintBottom_toBottomOf="parent"
+                ads:layout_constraintEnd_toEndOf="parent"
+                ads:layout_constraintTop_toTopOf="parent"
 
                 >
-               <!-- <FrameLayout
-                    android:id="@+id/flAd2"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginTop="8dp"
-                    >
-                    <TextView
-                        android:id="@+id/tvAd2"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/ad_container_bg"
-                        android:textColor="@color/colorPrimary"
-                        android:text="Ad"
-                        android:gravity="center"
-                        android:textSize="20sp"
-                        android:clickable="false"
-                        android:longClickable="false"
+                <!-- <FrameLayout
+                     android:id="@+id/flAd2"
+                     android:layout_width="match_parent"
+                     android:layout_height="50dp"
+                     android:layout_marginStart="10dp"
+                     android:layout_marginEnd="10dp"
+                     android:layout_marginTop="8dp"
+                     >
+                     <TextView
+                         android:id="@+id/tvAd2"
+                         android:layout_width="match_parent"
+                         android:layout_height="match_parent"
+                         android:background="@drawable/ad_container_bg"
+                         android:textColor="@color/colorPrimary"
+                         android:text="Ad"
+                         android:gravity="center"
+                         android:textSize="20sp"
+                         android:clickable="false"
+                         android:longClickable="false"
 
-                        />
-                    <ImageView
-                        android:id="@+id/imageAd2"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:clickable="false"
-                        android:longClickable="false"
-                        />
-                    <ProgressBar
-                        android:id="@+id/progBarAd2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:clickable="false"
-                        android:longClickable="false"
-                        />
-                    <ImageView
-                        android:id="@+id/imgDelete2"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/ic_remove"
-                        android:tint="@color/gray"
-                        android:layout_margin="3dp"
-                        android:visibility="gone"
-                        />
-                </FrameLayout>
--->                <TextView
+                         />
+                     <ImageView
+                         android:id="@+id/imageAd2"
+                         android:layout_width="match_parent"
+                         android:layout_height="match_parent"
+                         android:clickable="false"
+                         android:longClickable="false"
+                         />
+                     <ProgressBar
+                         android:id="@+id/progBarAd2"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_gravity="center"
+                         android:clickable="false"
+                         android:longClickable="false"
+                         />
+                     <ImageView
+                         android:id="@+id/imgDelete2"
+                         android:layout_width="20dp"
+                         android:layout_height="20dp"
+                         android:src="@drawable/ic_remove"
+                         android:tint="@color/gray"
+                         android:layout_margin="3dp"
+                         android:visibility="gone"
+                         />
+                 </FrameLayout>
+ -->
+                <TextView
                     android:id="@+id/tvTitleAd2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:ellipsize="end"
+                    android:maxLines="2"
                     android:textColor="@color/white"
                     android:textSize="15sp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:maxLines="2"
-                    android:ellipsize="end"
 
                     />
             </LinearLayout>
@@ -203,52 +243,50 @@
             android:visibility="gone"
 
             >
+
             <ImageView
                 android:id="@+id/image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@color/white"
-                />
+                android:background="@color/white" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
                 android:layout_margin="8dp"
-                android:textSize="14sp"
-                android:textColor="@color/colorPrimary"
-                android:text="@string/ad"
+                android:background="@drawable/ad_bg"
                 android:paddingLeft="30dp"
                 android:paddingRight="30dp"
-                android:background="@drawable/ad_bg"
-                />
+                android:text="@string/ad"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
             <FrameLayout
 
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:layout_gravity="bottom"
-                >
+                android:layout_gravity="bottom">
+
                 <ProgressBar
                     android:id="@+id/progBar"
+                    style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:progressDrawable="@drawable/progress_bg"
-                    android:secondaryProgress="100"
-                    android:progress="0"
                     android:indeterminate="false"
-                    />
+                    android:progress="0"
+                    android:progressDrawable="@drawable/progress_bg"
+                    android:secondaryProgress="100" />
 
                 <TextView
                     android:id="@+id/tvCounter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textSize="13sp"
                     android:textColor="@color/colorPrimary"
-                    />
+                    android:textSize="13sp" />
 
             </FrameLayout>
         </FrameLayout>
@@ -259,16 +297,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
 
         <ProgressBar
             android:id="@+id/progBarLoad2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
 
 
     </FrameLayout>

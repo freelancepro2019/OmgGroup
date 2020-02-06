@@ -14,6 +14,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -24,10 +25,12 @@ import android.widget.VideoView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
 import com.elashry.omggroup.Api;
 import com.elashry.omggroup.R;
 import com.elashry.omggroup.Services;
 import com.elashry.omggroup.models.AdsDataModel;
+import com.elashry.omggroup.models.ImageAdsModel;
 import com.elashry.omggroup.models.VideoAdsModel;
 import com.elashry.omggroup.preference.Preference;
 import com.google.android.gms.ads.AdView;
@@ -48,24 +51,24 @@ import retrofit2.Retrofit;
 
 public class TvActivity extends AppCompatActivity {
 
-    private String url, bg = "";
-    private Boolean ads;
+    private String url, bg,hashtag = "";
+    private Boolean ads,active_logo,active_image_ads,active_time,active_hash_tag;
     private VideoView videoViewAds;//,videoView
     private WebView webView;
 
     private FrameLayout flAd;
     private RelativeLayout app_video_box;
-    private ImageView image, imgOrientation;
+    private ImageView image, imgOrientation,imgLogo,imgads;
     private ProgressBar progBar, progBarLoad,progBarLoad2;
-    private TextView tvCounter;
+    private TextView tvCounter,tvHashtag;
     private MediaPlayer mp,mp2;
-    private CountDownTimer adsTime, timer;
+    private CountDownTimer adsTime, timer,imgTime;
     private MediaController mediaController;
     private boolean isNormal = true;
     private AdView adView,adView2;
 
     private ProgressBar progBarAd,progBarAd2;
-    private TextView tvAd,tvAd2,tvTitleAd,tvTitleAd2;
+    private TextView tvClock,tvAd,tvAd2,tvTitleAd,tvTitleAd2;
     private ImageView imageAd,imageAd2;
     private Preference preference;
     private FrameLayout flAd1;
@@ -74,9 +77,11 @@ public class TvActivity extends AppCompatActivity {
     private RewardedVideoAd mRewardedVideoAd;
     private final String VIDEO = "http://admin.omgchannel.net/storage/";
     private List<VideoAdsModel.Video> videoList;
-    private int period =20;
-    private int currentVideoIndex = 0;
-    private boolean isVideoStarted = false;
+    private int period =20,periodImg=20;
+    private int currentVideoIndex = 0,currentImgIndex=0;
+    private boolean isTimerStarted = false,isImgTimerStarted=false;
+    private LinearLayout Lin_imgAds;
+    private List<String> imageAdsModelList;
 
 
     @Override
@@ -87,6 +92,7 @@ public class TvActivity extends AppCompatActivity {
         getDataFromIntent();
 
         initView();
+        getData();
 //        adView = findViewById(R.id.adView);
 //        AdRequest request = new AdRequest.Builder().build();
 //        adView.loadAd(request);
@@ -100,6 +106,7 @@ public class TvActivity extends AppCompatActivity {
 
     private void initView() {
 
+        imageAdsModelList = new ArrayList<>();
         videoList = new ArrayList<>();
         preference = Preference.newInstance();
 
@@ -108,7 +115,7 @@ public class TvActivity extends AppCompatActivity {
         flAd = findViewById(R.id.flAd);
         app_video_box = findViewById(R.id.app_video_box);
         image = findViewById(R.id.image);
-        imgOrientation = findViewById(R.id.imgOrientation);
+        //imgOrientation = findViewById(R.id.imgOrientation);
 
 
         progBar = findViewById(R.id.progBar);
@@ -122,13 +129,40 @@ public class TvActivity extends AppCompatActivity {
 
         progBarLoad2 = findViewById(R.id.progBarLoad2);
         videoViewAds = findViewById(R.id.videoViewAds);
+        tvClock=findViewById(R.id.tvClock);
 
+        Lin_imgAds=findViewById(R.id.Lin_imgAds);
+        imgads=findViewById(R.id.imgads);
+        tvHashtag=findViewById(R.id.tvHashtag);
+        tvHashtag.setText(hashtag);
+
+        if (active_image_ads==false)
+        {
+            Lin_imgAds.setVisibility(View.GONE);
+        }else {
+            Lin_imgAds.setVisibility(View.VISIBLE);
+
+        }
+        if (active_hash_tag==false)
+        {
+            tvHashtag.setVisibility(View.GONE);
+        }else {
+            tvHashtag.setVisibility(View.VISIBLE);
+
+        }
+
+      //  tvClock.setText(System.currentTimeMillis()+"");
 
         Log.e("url",url);
         /*mediaController.setAnchorView(videoView);
         videoView.setMediaController(mediaController);*////////////
         image.setImageResource(R.drawable.bg);
 
+        imgLogo=findViewById(R.id.imgLogo);
+
+        Glide.with(TvActivity.this)
+                .load(R.drawable.logo_gif)
+                .into(imgLogo);
         /////videoView.measure(videoView.getMeasuredWidth() + 100, videoView.getMeasuredHeight() + 100);
 
         progBarAd = findViewById(R.id.progBarAd);
@@ -140,23 +174,23 @@ public class TvActivity extends AppCompatActivity {
        // tvTitleAd = findViewById(R.id.tvTitleAd);
        // tvTitleAd2 = findViewById(R.id.tvTitleAd2);
 
-        imageAd = findViewById(R.id.imageAd);
+      //  imageAd = findViewById(R.id.imageAd);
       //  imageAd2 = findViewById(R.id.imageAd2);
 
-        imgDelete1 = findViewById(R.id.imgDelete1);
+      //  imgDelete1 = findViewById(R.id.imgDelete1);
        // imgDelete2 = findViewById(R.id.imgDelete2);
 
-        flAd1 = findViewById(R.id.flAd1);
+      //  flAd1 = findViewById(R.id.flAd1);
       //  flAd2 = findViewById(R.id.flAd2);
-        flAd1.setVisibility(View.GONE);
-        MobileAds.initialize(this, "ca-app-pub-1001110363789350~7595359427");
+      //  flAd1.setVisibility(View.GONE);
+       // MobileAds.initialize(this, "ca-app-pub-1001110363789350~7595359427");
 
         //RewardedVideoAd
       /*  mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
         mRewardedVideoAd.loadAd("ca-app-pub-1001110363789350/5402443645", new AdRequest.Builder().build());
         mRewardedVideoAd.setRewardedVideoAdListener(rewardedVideoAdListener);
 */
-        flAd1.setOnClickListener(new View.OnClickListener() {
+       /* flAd1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (itemModel!=null)
@@ -165,7 +199,8 @@ public class TvActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
             }
-        });
+        });*/
+
 
       /*  flAd2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,13 +214,13 @@ public class TvActivity extends AppCompatActivity {
             }
         });*/
 
-        imgDelete1.setOnClickListener(new View.OnClickListener() {
+      /*  imgDelete1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 flAd1.setVisibility(View.GONE);
               //  tvTitleAd.setVisibility(View.GONE);
             }
-        });
+        });*/
 
      /*   imgDelete2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -200,7 +235,7 @@ public class TvActivity extends AppCompatActivity {
 
 
 
-        imgOrientation.setOnClickListener(new View.OnClickListener() {
+    /*    imgOrientation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isNormal) {
@@ -212,13 +247,28 @@ public class TvActivity extends AppCompatActivity {
 
                 }
             }
-        });
+        });*/
         if (ads==false){
             flAd1.setVisibility(View.GONE);
         }
         else {
         getAds();
         }
+        if (active_time==false)
+        {
+         tvClock.setVisibility(View.GONE);
+        }else {
+            tvClock.setVisibility(View.VISIBLE);
+
+        }
+        if (active_logo==false)
+        {
+            imgLogo.setVisibility(View.GONE);
+        }else {
+            imgLogo.setVisibility(View.VISIBLE);
+
+        }
+
 
         getVideoAds();
 
@@ -435,7 +485,7 @@ public class TvActivity extends AppCompatActivity {
 
     private void startTimer(int time) {
         Log.e("time",time+"__");
-
+        isTimerStarted =true;
         videoViewAds.setVisibility(View.GONE);
         progBarLoad2.setVisibility(View.GONE);
 
@@ -448,6 +498,7 @@ public class TvActivity extends AppCompatActivity {
             @Override
             public void onFinish() {
 
+                isTimerStarted = false;
                 if (videoList.size()>0)
                 {
                     playVideoAds();
@@ -460,6 +511,41 @@ public class TvActivity extends AppCompatActivity {
         };
 
         timer.start();
+
+    }
+
+    private void startTimerAds(int time) {
+        isImgTimerStarted =true;
+        imgTime = new CountDownTimer(1000*time, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+                Log.e("pppppp",currentImgIndex+"__");
+                isImgTimerStarted = false;
+
+
+                if (currentImgIndex<imageAdsModelList.size())
+                {
+                    Picasso.with(TvActivity.this).load(Uri.parse(VIDEO+imageAdsModelList.get(currentImgIndex))).fit().into(imgads);
+                    imgTime.start();
+                    currentImgIndex++;
+                }else {
+
+                    currentImgIndex= 0;
+                    Picasso.with(TvActivity.this).load(Uri.parse(VIDEO+imageAdsModelList.get(currentImgIndex))).fit().into(imgads);
+                    imgTime.start();
+                }
+
+
+            }
+        };
+
+        imgTime.start();
 
     }
 
@@ -536,14 +622,14 @@ public class TvActivity extends AppCompatActivity {
 
 
 
-                                flAd1.setVisibility(View.VISIBLE);
+                               // flAd1.setVisibility(View.VISIBLE);
 
                                 //  tvAd2.setVisibility(View.GONE);
 
                          //   tvTitleAd.setText(response.body().getPayload().getItems().get(0).getTitle());
                            // tvTitleAd2.setText(response.body().getPayload().getItems().get(0).getTitle());
 
-                            Picasso.with(TvActivity.this).load(Uri.parse(response.body().getPayload().getItems().get(0).getMedia().getUrl())).fit().into(imageAd, new com.squareup.picasso.Callback() {
+                         /*   Picasso.with(TvActivity.this).load(Uri.parse(response.body().getPayload().getItems().get(0).getMedia().getUrl())).fit().into(imageAd, new com.squareup.picasso.Callback() {
                                 @Override
                                 public void onSuccess() {
                                     progBarAd.setVisibility(View.GONE);
@@ -556,7 +642,7 @@ public class TvActivity extends AppCompatActivity {
 
                                 }
                             });
-
+*/
                            /* Picasso.with(TvActivity.this).load(Uri.parse(response.body().getPayload().getItems().get(0).getMedia().getUrl())).fit().into(imageAd2, new com.squareup.picasso.Callback() {
                                 @Override
                                 public void onSuccess() {
@@ -591,7 +677,45 @@ public class TvActivity extends AppCompatActivity {
         });
     }
 
+    private void getData()
+    {
+        Retrofit retrofit = Api.getClient("http://admin.omgchannel.net/");
+        Services services = retrofit.create(Services.class);
+        Call<List<ImageAdsModel>> call = services.getImgAds();
+        call.enqueue(new Callback<List<ImageAdsModel>>() {
+            @Override
+            public void onResponse(Call<List<ImageAdsModel>> call, Response<List<ImageAdsModel>> response) {
 
+                if (response.isSuccessful()&&response.body()!=null&&response.body().size()>0) {
+
+                    if (response.body().get(0).getImages().size()>0)
+                    {
+                        periodImg = response.body().get(0).getPeriod();
+                        imageAdsModelList.addAll(response.body().get(0).getImages());
+                        if (response.body().get(0).getImages().size()>1)
+                        {
+                            Picasso.with(TvActivity.this).load(Uri.parse(VIDEO+imageAdsModelList.get(currentImgIndex))).fit().into(imgads);
+
+                            currentImgIndex++;
+                            startTimerAds(response.body().get(0).getPeriod());
+
+
+                        }
+                    }
+
+                } else {
+                    Toast.makeText(TvActivity.this, "خطأ حاول مرة اخرى لاحقا", Toast.LENGTH_LONG).show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ImageAdsModel>> call, Throwable t) {
+
+                Toast.makeText(TvActivity.this, "تحقق من الاتصال بالانترنت", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -636,6 +760,11 @@ public class TvActivity extends AppCompatActivity {
             url = intent.getStringExtra("url");
             bg = intent.getStringExtra("bg");
             ads=intent.getBooleanExtra("ads",false);
+            active_hash_tag=intent.getBooleanExtra("active_hash_tag",false);
+            active_image_ads=intent.getBooleanExtra("active_image_ads",false);
+            active_logo=intent.getBooleanExtra("active_logo",false);
+            active_time=intent.getBooleanExtra("active_time",false);
+            hashtag=intent.getStringExtra("hashtag");
 
         }
     }
@@ -656,7 +785,19 @@ public class TvActivity extends AppCompatActivity {
         webView.onResume();
         if (videoList.size()>0)
         {
-            startTimer(period);
+            if (!isTimerStarted){
+                startTimer(period);
+
+            }
+
+        }
+
+        if (imageAdsModelList.size()>0)
+        {
+            if (!isImgTimerStarted){
+                startTimerAds(periodImg);
+
+            }
 
         }
 
@@ -667,6 +808,10 @@ public class TvActivity extends AppCompatActivity {
         super.onDestroy();
         if (timer != null) {
             timer.cancel();
+        }
+
+        if (imgTime != null) {
+            imgTime.cancel();
         }
 
         if (adsTime != null) {

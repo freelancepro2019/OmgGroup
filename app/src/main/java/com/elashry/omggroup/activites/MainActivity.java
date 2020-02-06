@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private ImageView image_tv, image_radio, image_share, image_youtube, image_linkedin, image_facebook;
-    private String Tvurl = "", AudioURL = "", bg = "";
+    private String Tvurl = "", AudioURL = "", bg = "",hashtag="";
     private AdView adView, adView2, adView3;
     private ImageView image;
     private LinearLayout nav_tv, nav_radio, nav_about, nav_advertise;
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity
     private FrameLayout flAd1,flAd2;
     private Preference preference;
     private AdsDataModel.ItemModel itemModel=null;
-    private Boolean ads=false;
+    private Boolean ads=false,active_logo=false,active_image_ads=false,active_time=false,active_hash_tag=false;
 
 
 
@@ -151,6 +151,12 @@ public class MainActivity extends AppCompatActivity
                     intent.putExtra("url", Tvurl);
                     intent.putExtra("bg", bg);
                     intent.putExtra("ads",ads);
+                    intent.putExtra("active_logo",active_logo);
+                    intent.putExtra("active_image_ads",active_image_ads);
+                    intent.putExtra("active_time",active_time);
+                    intent.putExtra("active_hash_tag",active_hash_tag);
+                    intent.putExtra("hashtag",hashtag);
+
                     startActivity(intent);
                 }
 
@@ -222,6 +228,13 @@ public class MainActivity extends AppCompatActivity
                             public void run() {
                                 Intent intent = new Intent(MainActivity.this, TvActivity.class);
                                 intent.putExtra("url", Tvurl);
+                                intent.putExtra("bg", bg);
+                                intent.putExtra("ads",ads);
+                                intent.putExtra("active_logo",active_logo);
+                                intent.putExtra("active_image_ads",active_image_ads);
+                                intent.putExtra("active_time",active_time);
+                                intent.putExtra("active_hash_tag",active_hash_tag);
+                                intent.putExtra("hashtag",hashtag);
                                 startActivity(intent);
                             }
                         }, 300);
@@ -327,6 +340,11 @@ public class MainActivity extends AppCompatActivity
                     AudioURL = response.body().getRadio_url();
                     bg = response.body().getApp_background();
                     ads=response.body().getAds();
+                    active_hash_tag=response.body().getActive_hash_tag();
+                    active_image_ads=response.body().getActive_image_ads();
+                    active_logo=response.body().getActive_logo();
+                    active_time=response.body().getActive_time();
+                    hashtag=response.body().getHashtag();
                     if (ads==false){
                         flAd1.setVisibility(View.GONE);
                         flAd2.setVisibility(View.GONE);
