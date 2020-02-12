@@ -40,13 +40,7 @@
             android:visibility="gone"
             />
 
-        <ProgressBar
-            android:id="@+id/progBarLoad"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
 
-            />
 
         <RelativeLayout
             android:id="@+id/re"
@@ -62,7 +56,6 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentBottom="true"
-                android:alpha="0"
                 />
         </RelativeLayout>
 
@@ -73,7 +66,13 @@
             android:layout_gravity="center"
             android:visibility="gone" />
 
+        <ProgressBar
+            android:id="@+id/progBarLoad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
 
+            />
         <LinearLayout
             android:id="@+id/Lin_imgAds"
             android:layout_width="wrap_content"

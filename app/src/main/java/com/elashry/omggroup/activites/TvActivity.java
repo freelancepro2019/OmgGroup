@@ -77,6 +77,7 @@ public class TvActivity extends AppCompatActivity {
     private List<String> imageAdsModelList;
     private View view;
     private int current_pos =0;
+    private boolean isFirstTime = true;
 
 
 
@@ -328,10 +329,24 @@ public class TvActivity extends AppCompatActivity {
                 if (videoList.size()>0)
                 {
 
-                    startTimer(20);
+                    startTimer(period);
                 }
 
 
+            }
+        });
+
+        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                Log.e("vidcpmp","commmpppp");
+                progBarLoad.setVisibility(View.VISIBLE);
+                if (timer!=null)
+                {
+                    timer.cancel();
+
+                }
+                playVideo();
             }
         });
 
@@ -340,8 +355,6 @@ public class TvActivity extends AppCompatActivity {
     private void playVideoAds() {
 
         Log.e("mmm","lll");
-
-        videoViewAds.setAlpha(1);
         String urlVideo = VIDEO+videoList.get(currentVideoIndex).getDownloadLink();
         videoViewAds.setVideoPath(urlVideo);
         videoViewAds.requestFocus();
@@ -350,10 +363,12 @@ public class TvActivity extends AppCompatActivity {
             public void onPrepared(MediaPlayer mp) {
                 Log.e("fff","gggg");
                 progBarLoad2.setVisibility(View.GONE);
+                videoViewAds.setAlpha(1.0f);
                 videoView.pause();
                 current_pos = videoView.getCurrentPosition();
+
+
                 videoViewAds.start();
-                videoViewAds.setAlpha(1.0f);
 
             }
         });
@@ -366,7 +381,9 @@ public class TvActivity extends AppCompatActivity {
                 Log.e("complete","complete");
                 //playVideoAds();
 
+                Log.e("pos",currentVideoIndex+"_");
                 currentVideoIndex++;
+
 
                 if (currentVideoIndex<videoList.size())
                 {
@@ -379,11 +396,11 @@ public class TvActivity extends AppCompatActivity {
 
                     videoViewAds.setVisibility(View.GONE);
                     currentVideoIndex = 0;
-                    videoViewAds.setAlpha(0.0f);
                     progBarLoad2.setVisibility(View.GONE);
                     view.setVisibility(View.GONE);
-                    videoView.start();
+                    videoView.resume();
 
+                    Log.e("gg","oo");
                     if (videoList.size()>0)
                     {
                         startTimer(period);
@@ -408,10 +425,12 @@ public class TvActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-
-                isTimerStarted = false;
+                progBarLoad2.setVisibility(View.VISIBLE);
                 videoViewAds.setVisibility(View.VISIBLE);
+                isTimerStarted = false;
+                timer.cancel();
                 playVideoAds();
+
 
 
 
@@ -486,7 +505,7 @@ public class TvActivity extends AppCompatActivity {
         super.onResume();
         videoView.setVisibility(View.VISIBLE);
         view.setVisibility(View.GONE);
-        videoView.start();
+        videoView.resume();
         if (videoList.size()>0)
         {
             if (!isTimerStarted){
