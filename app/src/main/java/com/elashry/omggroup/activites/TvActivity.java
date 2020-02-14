@@ -77,6 +77,7 @@ public class TvActivity extends AppCompatActivity {
     private List<String> imageAdsModelList;
     private View view;
     private int current_pos =0;
+    private boolean adsRunning = false;
     private boolean isFirstTime = true;
 
 
@@ -320,26 +321,58 @@ public class TvActivity extends AppCompatActivity {
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
-                Log.e("fff","gggg");
+                Log.e("rrr","rrrr");
+
+                Log.e("adds",adsRunning+"_");
+                Log.e("isFirst",isFirstTime+"_");
 
                 progBarLoad.setVisibility(View.GONE);
-                videoView.start();
-                currentVideoIndex =0;
 
-                if (videoList.size()>0)
+                if (adsRunning)
                 {
 
-                    startTimer(period);
-                }
+
+                    videoView.start();
+
+                }else
+                    {
+
+                        if (isFirstTime)
+                        {
+
+                            videoView.start();
+
+                            if (videoList.size()>0)
+                            {
+
+                                startTimer(period);
+                            }
+
+                        }else
+                            {
+                                Log.e("bb","bb");
+                                videoView.start();
+                                if (videoList.size()>0)
+                                {
+                                    startTimer(period);
+
+                                }
+                            }
+
+
+
+                    }
+
+
+
 
 
             }
         });
 
-        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+        /*videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                Log.e("vidcpmp","commmpppp");
                 progBarLoad.setVisibility(View.VISIBLE);
                 if (timer!=null)
                 {
@@ -348,73 +381,92 @@ public class TvActivity extends AppCompatActivity {
                 }
                 playVideo();
             }
-        });
+        });*/
 
 
     }
     private void playVideoAds() {
 
-        Log.e("mmm","lll");
+        //progBarLoad.setVisibility(View.VISIBLE);
+        current_pos = videoView.getCurrentPosition();
+
         String urlVideo = VIDEO+videoList.get(currentVideoIndex).getDownloadLink();
-        videoViewAds.setVideoPath(urlVideo);
-        videoViewAds.requestFocus();
-        videoViewAds.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+       /* videoViewAds.setVideoPath(urlVideo);
+        videoViewAds.requestFocus();*/
+
+       videoView.setVideoPath(urlVideo);
+       videoView.requestFocus();
+
+
+       /*//video ads
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
-                Log.e("fff","gggg");
-                progBarLoad2.setVisibility(View.GONE);
+                videoView.start();
+
+               *//* progBarLoad2.setVisibility(View.GONE);
                 videoViewAds.setAlpha(1.0f);
                 videoView.pause();
                 current_pos = videoView.getCurrentPosition();
 
 
-                videoViewAds.start();
+                videoViewAds.start();*//*
 
             }
         });
+*/
 
-
-        videoViewAds.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+        //vid ads
+        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(final MediaPlayer mp) {
 
                 Log.e("complete","complete");
-                //playVideoAds();
 
-                Log.e("pos",currentVideoIndex+"_");
-                currentVideoIndex++;
-
-
-                if (currentVideoIndex<videoList.size())
-                {
-                    progBarLoad2.setVisibility(View.VISIBLE);
-                    view.setVisibility(View.GONE);
-                    String urlVideo = VIDEO+videoList.get(currentVideoIndex).getDownloadLink();
-                    videoViewAds.setVideoURI(Uri.parse(urlVideo));
-                }else
+                if (adsRunning)
                 {
 
-                    videoViewAds.setVisibility(View.GONE);
-                    currentVideoIndex = 0;
-                    progBarLoad2.setVisibility(View.GONE);
-                    view.setVisibility(View.GONE);
-                    videoView.resume();
+                    currentVideoIndex++;
 
-                    Log.e("gg","oo");
-                    if (videoList.size()>0)
+                    if (currentVideoIndex<videoList.size())
                     {
-                        startTimer(period);
+                        progBarLoad.setVisibility(View.VISIBLE);
+                        view.setVisibility(View.GONE);
+                        String urlVideo = VIDEO+videoList.get(currentVideoIndex).getDownloadLink();
+                        videoView.setVideoPath(urlVideo);
+
+                        //videoViewAds.setVideoURI(Uri.parse(urlVideo));
+                    }else
+                    {
+
+
+                        isFirstTime = false;
+                        adsRunning = false;
+                        // videoViewAds.setVisibility(View.GONE);
+                        currentVideoIndex = 0;
+                        //progBarLoad2.setVisibility(View.GONE);
+                        view.setVisibility(View.GONE);
+                        progBarLoad.setVisibility(View.VISIBLE);
+                        videoView.setVideoPath(url);
+
+
 
                     }
+                }else
+                    {
+                        isFirstTime = true;
+                        playVideo();
+                    }
 
-                }
+
+
+
 
             }
         });
     }
 
     private void startTimer(int time) {
-        Log.e("dddd","ttt");
         isTimerStarted =true;
 
         timer = new CountDownTimer(1000*time, 1000) {
@@ -425,10 +477,14 @@ public class TvActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                progBarLoad2.setVisibility(View.VISIBLE);
-                videoViewAds.setVisibility(View.VISIBLE);
+               /* progBarLoad2.setVisibility(View.VISIBLE);
+                videoViewAds.setVisibility(View.VISIBLE);*/
+                progBarLoad.setVisibility(View.VISIBLE);
                 isTimerStarted = false;
+                isFirstTime = false;
                 timer.cancel();
+                adsRunning = true;
+
                 playVideoAds();
 
 
