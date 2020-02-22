@@ -277,11 +277,14 @@ public class TvActivity extends AppCompatActivity {
 
 
                     videoList.addAll(response.body().get(0).getVideos());
+                    view.setVisibility(View.GONE);
+                    videoView.setVideoURI(Uri.parse(url));
                     playVideo();
 
 
                 } else {
-
+                    view.setVisibility(View.GONE);
+                    videoView.setVideoURI(Uri.parse(url));
                     playVideo();
                     Toast.makeText(TvActivity.this, "فشل", Toast.LENGTH_SHORT).show();
                 }
@@ -298,8 +301,7 @@ public class TvActivity extends AppCompatActivity {
 
     private void playVideo() {
 
-        view.setVisibility(View.GONE);
-        videoView.setVideoPath(url);
+
         videoView.requestFocus();
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
@@ -307,7 +309,14 @@ public class TvActivity extends AppCompatActivity {
 
                 progBarLoad.setVisibility(View.GONE);
 
-                if (adsRunning) {
+                videoView.start();
+
+                if (!adsRunning&&videoList.size()>0)
+                {
+                    startTimer(period);
+                }
+
+               /* if (adsRunning) {
 
 
                     videoView.start();
@@ -333,9 +342,36 @@ public class TvActivity extends AppCompatActivity {
                     }
 
 
-                }
+                }*/
 
 
+            }
+        });
+
+        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                progBarLoad.setVisibility(View.VISIBLE);
+
+                if (adsRunning)
+                {
+
+                    currentVideoIndex++;
+                    if (currentVideoIndex<videoList.size())
+                    {
+                        videoView.setVideoURI(Uri.parse(VIDEO+videoList.get(currentVideoIndex).getDownloadLink()));
+                    }else
+                        {
+                            currentVideoIndex =0;
+                            adsRunning = false;
+                            videoView.setVideoURI(Uri.parse(url));
+                        }
+
+                }else
+                    {
+                        videoView.setVideoURI(Uri.parse(url));
+
+                    }
             }
         });
 
@@ -409,7 +445,13 @@ public class TvActivity extends AppCompatActivity {
                 timer.cancel();
                 adsRunning = true;
 
-                playVideoAds();
+                if (videoList.size()>0)
+                {
+                    videoView.setVideoPath(VIDEO+videoList.get(0).getDownloadLink());
+                }
+
+                //playVideo();
+                //playVideoAds();
 
 
             }
@@ -451,6 +493,10 @@ public class TvActivity extends AppCompatActivity {
         imgTime.start();
 
     }
+
+
+
+
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
